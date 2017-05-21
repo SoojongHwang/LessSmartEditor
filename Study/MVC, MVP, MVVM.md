@@ -1,6 +1,6 @@
 # MVC, MVP, MVVM
 
-![MVC, MVP, MVVM](C:\Users\Kepler\Documents\GitHub\LessSmartEditor\Study\images/mvc_mvp_mvvm.png)
+![MVC, MVP, MVVM](https://github.com/SoojongHwang/LessSmartEditor/blob/master/Study/images/mvc_mvp_mvvm.png)
 
 
 
