@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickedAddText(View v){
-        TextComponent t = new TextComponent(count, Type.TEXT, "aaa");
+        TextComponent t = new TextComponent(count, Type.TEXT, "");
         adapter.addComponent(t);
         adapter.notifyDataSetChanged();
     }
@@ -39,5 +39,9 @@ public class MainActivity extends AppCompatActivity {
         ImageComponent i = new ImageComponent(count, Type.IMAGE, R.drawable.d1);
         adapter.addComponent(i);
         adapter.notifyDataSetChanged();
+    }
+    public void onClickedAddMap(View v){    //삭제기능
+        adapter = new MyAdapter();
+        view.setAdapter(adapter);
     }
 }

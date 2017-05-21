@@ -14,7 +14,7 @@ import com.example.kepler.lesssmarteditor.myrecyclerview.BaseViewHolder;
  */
 
 public class TextViewHolder extends BaseViewHolder<TextComponent>{
-    private EditText mEditText;
+    public EditText mEditText;
 
     public static TextViewHolder getInstance(ViewGroup parent){
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_text, parent, false);

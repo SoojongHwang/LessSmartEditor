@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 
 public class MyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
-    ArrayList<BaseComponent> list = new ArrayList<>();
+    private ArrayList<BaseComponent> list = new ArrayList<>();
 
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -40,8 +40,8 @@ public class MyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         else if (holder instanceof ImageViewHolder) {
             ((ImageViewHolder) holder).bindView((ImageComponent) list.get(position));
         }
-        else{//MapViewHolder Implement
-
+        else{
+            //MapViewHolder Implement
         }
     }
 

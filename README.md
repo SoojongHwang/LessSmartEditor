@@ -13,7 +13,18 @@
 9. 불러오기 기능을 통해서 데이터베이스에 저장되어 있는 글들을 불러 올 수 있다.
 10. 아래그림의 디자인은 예시이며, 따라할 필요 없이 디자인은 각자 구현한다.단, 동일한 기능의 동작이 가능해야 한다.
 
-![requirement](https://github.com/SoojongHwang/LessSmartEditor/blob/master/Study/images/requirement.jpg)
+![requirement.jpg](https://github.com/SoojongHwang/LessSmartEditor/blob/master/Study/images/requirement.jpg?raw=false)
+
+## 05.20
+
+* Component 설계
+
+
+* Text, Image, Map 각각의 ViewHolder 를 BaseViewHolder로 추상화
+
+
 
 ## 05.21
 
+* 컴포넌트 추가중에 editText 가 수정되고있음 -> TextWatcher를 두어 해결하자
+* ​
