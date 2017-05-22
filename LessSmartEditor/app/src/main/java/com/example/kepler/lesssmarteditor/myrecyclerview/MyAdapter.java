@@ -45,11 +45,9 @@ public class MyAdapter<T extends BaseComponent> extends RecyclerView.Adapter<Bas
         if (holder instanceof TextViewHolder) {
             ((TextViewHolder) holder).mListener.updatePosition(holder.getAdapterPosition());
             ((TextViewHolder) holder).bindView((TextComponent) list.get(position));
-        }
-        else if (holder instanceof ImageViewHolder) {
+        } else if (holder instanceof ImageViewHolder) {
             ((ImageViewHolder) holder).bindView((ImageComponent) list.get(position));
-        }
-        else {
+        } else {
             //MapViewHolder Implement
         }
     }
@@ -83,9 +81,7 @@ public class MyAdapter<T extends BaseComponent> extends RecyclerView.Adapter<Bas
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (list.get(position) instanceof TextComponent) {
-                ((TextComponent) list.get(position)).setContents(s.toString());
-            }
+            ((TextComponent) list.get(position)).setContents(s.toString());
         }
 
         @Override

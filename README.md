@@ -26,9 +26,17 @@
 
 ## 05.21
 
-* 컴포넌트 추가중에 editText 가 수정되고있음 -> TextWatcher를 두어 해결하자
+* (BUG_01) 컴포넌트를 추가하거나, 스크롤을 내렸다 올렸을 때 기존의 editText 가 수정되고있음
 
-* image - > text 문제 해결하자
+* (BUG_02) image 추가 이후에 text 추가할 때 에러발생 
 
   ​
 
+
+## 05.22
+
+* BUG_01 해결 (TextWatcher로 해결 -> onBindView 이전에 item의 Position을 업데이트 해야함)
+
+* BUG_02 해결 (position으로 인해 발생하던 문제였는데 textwatcher 도입하니 고쳐짐)
+
+  ​
