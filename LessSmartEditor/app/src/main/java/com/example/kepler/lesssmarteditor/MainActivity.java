@@ -27,21 +27,24 @@ public class MainActivity extends AppCompatActivity {
 
         view.setLayoutManager(new LinearLayoutManager(this));
         view.setAdapter(adapter);
-
     }
 
     public void onClickedAddText(View v){
         TextComponent t = new TextComponent(count, Type.TEXT, "");
         adapter.addComponent(t);
-        adapter.notifyDataSetChanged();
+        init();
     }
     public void onClickedAddImage(View v){
         ImageComponent i = new ImageComponent(count, Type.IMAGE, R.drawable.d1);
         adapter.addComponent(i);
-        adapter.notifyDataSetChanged();
+        init();
     }
     public void onClickedAddMap(View v){    //삭제기능
         adapter = new MyAdapter();
         view.setAdapter(adapter);
+    }
+    private void init(){
+        adapter.notifyItemInserted(adapter.getItemCount()-1);
+        view.scrollToPosition(adapter.getItemCount()-1);
     }
 }

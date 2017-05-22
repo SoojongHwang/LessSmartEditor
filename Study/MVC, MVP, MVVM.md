@@ -1,8 +1,6 @@
 # MVC, MVP, MVVM
 
-![MVC, MVP, MVVM](https://github.com/SoojongHwang/LessSmartEditor/blob/master/Study/images/mvc_mvp_mvvm.png)
-
-
+![mvc_mvp_mvvm.png](https://github.com/SoojongHwang/LessSmartEditor/blob/master/Study/images/mvc_mvp_mvvm.png?raw=true)
 
 
 

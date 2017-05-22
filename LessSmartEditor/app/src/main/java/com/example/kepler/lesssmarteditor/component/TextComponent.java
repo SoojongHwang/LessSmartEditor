@@ -19,4 +19,9 @@ public class TextComponent extends BaseComponent{
     public void setContents(String contents) {
         this.contents = contents;
     }
+
+    @Override
+    public String toString() {
+        return "{"+this.contents+"}";
+    }
 }

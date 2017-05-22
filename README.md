@@ -27,4 +27,8 @@
 ## 05.21
 
 * 컴포넌트 추가중에 editText 가 수정되고있음 -> TextWatcher를 두어 해결하자
-* ​
+
+* image - > text 문제 해결하자
+
+  ​
+

@@ -6,13 +6,13 @@ package com.example.kepler.lesssmarteditor.component;
 public enum Type {
     TEXT(0),IMAGE(1),MAP(2);
 
-    private final int type;
+    private final int typeValue;
 
     Type(int type) {
-        this.type = type;
+        this.typeValue = type;
     }
 
-    public int getIntType() {
-        return type;
+    public int getTypeValue() {
+        return typeValue;
     }
 }
