@@ -39,7 +39,7 @@
             android:layout_weight="0.333"/>
         <Button
             android:id="@+id/btn_add_map"
-            android:text="map 추가"
+            android:text="초기화"
             android:onClick="onClickedAddMap"
             android:layout_width="0dp"
             android:layout_height="match_parent"

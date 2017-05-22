@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.kepler.lesssmarteditor.component.BaseComponent;
 import com.example.kepler.lesssmarteditor.component.ImageComponent;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
  * Created by Kepler on 2017-05-20.
  */
 
-public class MyAdapter<T extends BaseComponent> extends RecyclerView.Adapter<BaseViewHolder> {
+public class MyAdapter<T extends BaseComponent> extends RecyclerView.Adapter<BaseViewHolder> implements ItemTouchHelperListener {
     public ArrayList<T> list = new ArrayList<>();
 
     @Override
@@ -65,6 +66,28 @@ public class MyAdapter<T extends BaseComponent> extends RecyclerView.Adapter<Bas
 
     public void addComponent(T component) {
         list.add(component);
+    }
+
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        if (fromPosition < 0 || fromPosition >= list.size() || toPosition < 0 || toPosition >= list.size()) {
+            return false;
+        }
+
+        BaseComponent fromItem = list.get(fromPosition);
+        list.remove(fromPosition);
+        list.add(toPosition, (T) fromItem);
+
+        notifyItemMoved(fromPosition, toPosition);
+        return true;
+    }
+
+    @Override
+    public void onItemRemove(int position) {
+        if (!list.isEmpty())
+            list.remove(position);
+
+        notifyItemRemoved(position);
     }
 
 
