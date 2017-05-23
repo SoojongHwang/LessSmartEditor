@@ -1,4 +1,4 @@
-package com.example.kepler.lesssmarteditor.myrecyclerview;
+package com.example.kepler.lesssmarteditor.main.recyclerview;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -37,5 +37,14 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         listener.onItemRemove(viewHolder.getAdapterPosition());
+    }
+
+    /**
+     * Created by Kepler on 2017-05-22.
+     */
+
+    public interface ItemTouchHelperListener {
+        boolean onItemMove(int fromPosition, int toPosition);
+        void onItemRemove(int position);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.kepler.lesssmarteditor.myrecyclerview.viewholder;
+package com.example.kepler.lesssmarteditor.main.recyclerview.viewholder;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,8 +6,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.kepler.lesssmarteditor.R;
-import com.example.kepler.lesssmarteditor.component.ImageComponent;
-import com.example.kepler.lesssmarteditor.myrecyclerview.BaseViewHolder;
+import com.example.kepler.lesssmarteditor.main.component.ImageComponent;
+import com.example.kepler.lesssmarteditor.main.recyclerview.BaseViewHolder;
 
 /**
  * Created by Kepler on 2017-05-20.

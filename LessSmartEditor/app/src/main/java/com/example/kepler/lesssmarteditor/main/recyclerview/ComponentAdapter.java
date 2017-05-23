@@ -1,17 +1,17 @@
-package com.example.kepler.lesssmarteditor.myrecyclerview;
+package com.example.kepler.lesssmarteditor.main.recyclerview;
 
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.example.kepler.lesssmarteditor.component.BaseComponent;
-import com.example.kepler.lesssmarteditor.component.ImageComponent;
-import com.example.kepler.lesssmarteditor.component.TextComponent;
-import com.example.kepler.lesssmarteditor.component.Type;
-import com.example.kepler.lesssmarteditor.myrecyclerview.viewholder.ImageViewHolder;
-import com.example.kepler.lesssmarteditor.myrecyclerview.viewholder.TextViewHolder;
+import com.example.kepler.lesssmarteditor.main.component.BaseComponent;
+import com.example.kepler.lesssmarteditor.main.component.ImageComponent;
+import com.example.kepler.lesssmarteditor.main.component.TextComponent;
+import com.example.kepler.lesssmarteditor.main.component.Type;
+import com.example.kepler.lesssmarteditor.main.recyclerview.viewholder.ImageViewHolder;
+import com.example.kepler.lesssmarteditor.main.recyclerview.viewholder.TextViewHolder;
 
 import java.util.ArrayList;
 
@@ -19,8 +19,12 @@ import java.util.ArrayList;
  * Created by Kepler on 2017-05-20.
  */
 
-public class MyAdapter<T extends BaseComponent> extends RecyclerView.Adapter<BaseViewHolder> implements ItemTouchHelperListener {
-    public ArrayList<T> list = new ArrayList<>();
+public class ComponentAdapter<T extends BaseComponent> extends RecyclerView.Adapter<BaseViewHolder> implements ItemTouchHelperCallback.ItemTouchHelperListener {
+    public ArrayList<T> list;
+
+    public ComponentAdapter() {
+        list = new ArrayList<>();
+    }
 
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -69,16 +73,16 @@ public class MyAdapter<T extends BaseComponent> extends RecyclerView.Adapter<Bas
     }
 
     @Override
-    public boolean onItemMove(int fromPosition, int toPosition) {
-        if (fromPosition < 0 || fromPosition >= list.size() || toPosition < 0 || toPosition >= list.size()) {
+    public boolean onItemMove(int before, int after) {
+        if (before < 0 || before >= list.size() || after < 0 || after >= list.size()) {
             return false;
         }
 
-        BaseComponent fromItem = list.get(fromPosition);
-        list.remove(fromPosition);
-        list.add(toPosition, (T) fromItem);
+        T target = list.get(before);
+        list.remove(before);
+        list.add(after, target);
 
-        notifyItemMoved(fromPosition, toPosition);
+        notifyItemMoved(before, after);
         return true;
     }
 

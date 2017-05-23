@@ -1,4 +1,4 @@
-package com.example.kepler.lesssmarteditor.myrecyclerview;
+package com.example.kepler.lesssmarteditor.main.recyclerview;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

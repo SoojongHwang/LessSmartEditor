@@ -1,4 +1,4 @@
-package com.example.kepler.lesssmarteditor.component;
+package com.example.kepler.lesssmarteditor.main.component;
 
 public class BaseComponent {
     Type type;
