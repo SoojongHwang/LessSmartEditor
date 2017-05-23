@@ -19,7 +19,7 @@
             android:gravity="center_vertical|center_horizontal"/>
         <EditText
             android:id="@+id/address"
-            android:hint="불정로 6"
+            android:text="불정로 6"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.7"/>
@@ -37,11 +37,11 @@
         android:layout_weight="0.6">
 
     </com.nhn.android.maps.NMapView>
-    <ListView
-        android:id="@+id/listview"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/map_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.3">
 
-    </ListView>
+    </android.support.v7.widget.RecyclerView>
 </LinearLayout>

@@ -7,14 +7,14 @@ import android.widget.EditText;
 
 import com.example.kepler.lesssmarteditor.R;
 import com.example.kepler.lesssmarteditor.component.TextComponent;
-import com.example.kepler.lesssmarteditor.editor.recyclerview.BaseViewHolder;
+import com.example.kepler.lesssmarteditor.editor.recyclerview.ComponentViewHolder;
 import com.example.kepler.lesssmarteditor.editor.recyclerview.ComponentAdapter;
 
 /**
  * Created by Kepler on 2017-05-20.
  */
 
-public class TextViewHolder extends BaseViewHolder<TextComponent>{
+public class TextViewHolder extends ComponentViewHolder<TextComponent> {
     private EditText mEditText;
     public ComponentAdapter.EditTextChangeListener mListener;
 

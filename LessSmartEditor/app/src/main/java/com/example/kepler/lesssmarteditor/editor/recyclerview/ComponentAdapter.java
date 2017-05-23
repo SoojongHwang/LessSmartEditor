@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * Created by Kepler on 2017-05-20.
  */
 
-public class ComponentAdapter<T extends BaseComponent> extends RecyclerView.Adapter<BaseViewHolder> implements ItemTouchHelperCallback.ItemTouchHelperListener {
+public class ComponentAdapter<T extends BaseComponent> extends RecyclerView.Adapter<ComponentViewHolder> implements ItemTouchHelperCallback.ItemTouchHelperListener {
     public ArrayList<T> list;
 
     public ComponentAdapter() {
@@ -26,8 +26,8 @@ public class ComponentAdapter<T extends BaseComponent> extends RecyclerView.Adap
     }
 
     @Override
-    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        BaseViewHolder vh = null;
+    public ComponentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        ComponentViewHolder vh = null;
 
         Type type = Type.values()[viewType];
         switch (type) {
@@ -45,7 +45,7 @@ public class ComponentAdapter<T extends BaseComponent> extends RecyclerView.Adap
     }
 
     @Override
-    public void onBindViewHolder(BaseViewHolder holder, int position) {
+    public void onBindViewHolder(ComponentViewHolder holder, int position) {
         if (holder instanceof TextViewHolder) {
             ((TextViewHolder) holder).mListener.updatePosition(holder.getAdapterPosition());
             ((TextViewHolder) holder).bindView((TextComponent) list.get(position));

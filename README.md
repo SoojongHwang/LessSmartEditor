@@ -48,4 +48,5 @@
 
 * BUG_03 해결 (아이템이 삭제됐을때 list가 변했다는것을 adapter에게 알려주어야함 notify함수로 해결)
 * BUG_04 해결 (상동)
-
+* Retrofit 을 이용하여 Naver Map API 호출 및 결과 출력 기능 추가(RecyclerView)
+* ​

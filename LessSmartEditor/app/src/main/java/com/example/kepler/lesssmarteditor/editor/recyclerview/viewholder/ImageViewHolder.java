@@ -7,15 +7,13 @@ import android.widget.ImageView;
 
 import com.example.kepler.lesssmarteditor.R;
 import com.example.kepler.lesssmarteditor.component.ImageComponent;
-import com.example.kepler.lesssmarteditor.editor.recyclerview.BaseViewHolder;
-
-import butterknife.BindView;
+import com.example.kepler.lesssmarteditor.editor.recyclerview.ComponentViewHolder;
 
 /**
  * Created by Kepler on 2017-05-20.
  */
 
-public class ImageViewHolder extends BaseViewHolder<ImageComponent>{
+public class ImageViewHolder extends ComponentViewHolder<ImageComponent> {
     private ImageView mImageView;
 
     public static ImageViewHolder getInstance(ViewGroup parent){

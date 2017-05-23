@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         view.scrollToPosition(adapter.getItemCount()-1);
     }
     private void init(){
-        view = (RecyclerView)findViewById(R.id.recyclerView);
+        view = (RecyclerView)findViewById(R.id.main_recyclerView);
         adapter = new ComponentAdapter();
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(adapter));
         itemTouchHelper.attachToRecyclerView(view);
