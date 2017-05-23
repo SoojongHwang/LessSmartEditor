@@ -1,4 +1,4 @@
-package com.example.kepler.lesssmarteditor.main;
+package com.example.kepler.lesssmarteditor.editor;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,16 +9,14 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import com.example.kepler.lesssmarteditor.R;
-import com.example.kepler.lesssmarteditor.main.component.ImageComponent;
-import com.example.kepler.lesssmarteditor.main.component.TextComponent;
-import com.example.kepler.lesssmarteditor.main.component.Type;
-import com.example.kepler.lesssmarteditor.main.recyclerview.ComponentAdapter;
-import com.example.kepler.lesssmarteditor.main.recyclerview.ItemTouchHelperCallback;
+import com.example.kepler.lesssmarteditor.component.ImageComponent;
+import com.example.kepler.lesssmarteditor.component.TextComponent;
+import com.example.kepler.lesssmarteditor.component.Type;
+import com.example.kepler.lesssmarteditor.editor.recyclerview.ComponentAdapter;
+import com.example.kepler.lesssmarteditor.editor.recyclerview.ItemTouchHelperCallback;
 import com.example.kepler.lesssmarteditor.navermap.MapActivity;
 
 public class MainActivity extends AppCompatActivity {
-    static int count=0;
-
     RecyclerView view;
     ComponentAdapter adapter;
 
@@ -31,12 +29,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickedAddText(View v){
-        TextComponent t = new TextComponent(count, Type.TEXT, "");
+        TextComponent t = new TextComponent(Type.TEXT, "");
         adapter.addComponent(t);
         notifyToAdapter();
     }
     public void onClickedAddImage(View v){
-        ImageComponent i = new ImageComponent(count, Type.IMAGE, R.drawable.d1);
+        ImageComponent i = new ImageComponent(Type.IMAGE, R.drawable.d1);
         adapter.addComponent(i);
         notifyToAdapter();
     }

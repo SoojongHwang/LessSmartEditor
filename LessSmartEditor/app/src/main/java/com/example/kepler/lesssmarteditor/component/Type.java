@@ -1,4 +1,4 @@
-package com.example.kepler.lesssmarteditor.main.component;
+package com.example.kepler.lesssmarteditor.component;
 
 /**
  * Created by Kepler on 2017-05-20.

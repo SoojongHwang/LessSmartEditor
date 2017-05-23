@@ -1,4 +1,4 @@
-package com.example.kepler.lesssmarteditor.main.recyclerview.viewholder;
+package com.example.kepler.lesssmarteditor.editor.recyclerview.viewholder;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,16 +6,16 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.example.kepler.lesssmarteditor.R;
-import com.example.kepler.lesssmarteditor.main.component.TextComponent;
-import com.example.kepler.lesssmarteditor.main.recyclerview.BaseViewHolder;
-import com.example.kepler.lesssmarteditor.main.recyclerview.ComponentAdapter;
+import com.example.kepler.lesssmarteditor.component.TextComponent;
+import com.example.kepler.lesssmarteditor.editor.recyclerview.BaseViewHolder;
+import com.example.kepler.lesssmarteditor.editor.recyclerview.ComponentAdapter;
 
 /**
  * Created by Kepler on 2017-05-20.
  */
 
 public class TextViewHolder extends BaseViewHolder<TextComponent>{
-    public EditText mEditText;
+    private EditText mEditText;
     public ComponentAdapter.EditTextChangeListener mListener;
 
     public static TextViewHolder getInstance(ViewGroup parent, ComponentAdapter.EditTextChangeListener listener){

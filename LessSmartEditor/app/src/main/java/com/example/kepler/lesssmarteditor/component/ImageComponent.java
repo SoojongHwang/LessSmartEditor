@@ -1,4 +1,4 @@
-package com.example.kepler.lesssmarteditor.main.component;
+package com.example.kepler.lesssmarteditor.component;
 
 /**
  * Created by Kepler on 2017-05-20.
@@ -7,8 +7,8 @@ package com.example.kepler.lesssmarteditor.main.component;
 public class ImageComponent extends BaseComponent {
     private int imageUrl;
 
-    public ImageComponent(int index, Type type, int imageUrl) {
-        super(index, type);
+    public ImageComponent(Type type, int imageUrl) {
+        super(type);
         this.imageUrl = imageUrl;
     }
 

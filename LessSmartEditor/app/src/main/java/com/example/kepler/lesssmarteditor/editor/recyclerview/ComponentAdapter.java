@@ -1,17 +1,16 @@
-package com.example.kepler.lesssmarteditor.main.recyclerview;
+package com.example.kepler.lesssmarteditor.editor.recyclerview;
 
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.ViewGroup;
 
-import com.example.kepler.lesssmarteditor.main.component.BaseComponent;
-import com.example.kepler.lesssmarteditor.main.component.ImageComponent;
-import com.example.kepler.lesssmarteditor.main.component.TextComponent;
-import com.example.kepler.lesssmarteditor.main.component.Type;
-import com.example.kepler.lesssmarteditor.main.recyclerview.viewholder.ImageViewHolder;
-import com.example.kepler.lesssmarteditor.main.recyclerview.viewholder.TextViewHolder;
+import com.example.kepler.lesssmarteditor.component.BaseComponent;
+import com.example.kepler.lesssmarteditor.component.ImageComponent;
+import com.example.kepler.lesssmarteditor.component.TextComponent;
+import com.example.kepler.lesssmarteditor.component.Type;
+import com.example.kepler.lesssmarteditor.editor.recyclerview.viewholder.ImageViewHolder;
+import com.example.kepler.lesssmarteditor.editor.recyclerview.viewholder.TextViewHolder;
 
 import java.util.ArrayList;
 
@@ -90,8 +89,7 @@ public class ComponentAdapter<T extends BaseComponent> extends RecyclerView.Adap
     public void onItemRemove(int position) {
         if (!list.isEmpty())
             list.remove(position);
-
-        notifyItemRemoved(position);
+        notifyDataSetChanged();
     }
 
 

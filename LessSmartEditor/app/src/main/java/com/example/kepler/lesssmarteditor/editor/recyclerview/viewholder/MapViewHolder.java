@@ -1,4 +1,4 @@
-package com.example.kepler.lesssmarteditor.main.recyclerview.viewholder;
+package com.example.kepler.lesssmarteditor.editor.recyclerview.viewholder;
 
 /**
  * Created by Kepler on 2017-05-20.
