@@ -28,7 +28,6 @@ public class ComponentAdapter<T extends BaseComponent> extends RecyclerView.Adap
     @Override
     public ComponentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ComponentViewHolder vh = null;
-
         Type type = Type.values()[viewType];
         switch (type) {
             case TEXT:

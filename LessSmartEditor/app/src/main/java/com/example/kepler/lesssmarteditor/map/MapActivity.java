@@ -1,4 +1,4 @@
-package com.example.kepler.lesssmarteditor.navermap;
+package com.example.kepler.lesssmarteditor.map;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,12 +9,13 @@ import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.kepler.lesssmarteditor.R;
-import com.example.kepler.lesssmarteditor.navermap.api.NaverAPI;
-import com.example.kepler.lesssmarteditor.navermap.api.SearchResult;
-import com.example.kepler.lesssmarteditor.navermap.recyclerview.SiteAdapter;
+import com.example.kepler.lesssmarteditor.map.api.Item;
+import com.example.kepler.lesssmarteditor.map.api.NaverAPI;
+import com.example.kepler.lesssmarteditor.map.api.SearchResult;
+import com.example.kepler.lesssmarteditor.map.recyclerview.ItemClickListener;
+import com.example.kepler.lesssmarteditor.map.recyclerview.SiteAdapter;
 import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapView;
 
@@ -81,8 +82,18 @@ public class MapActivity extends NMapActivity {
             @Override
             public void onResponse(Call<SearchResult> call, Response<SearchResult> response) {
                 if(response.isSuccessful()){
-                    List<SearchResult.Item> list = response.body().items;
+                    List<Item> list = response.body().items;
                     adapter = new SiteAdapter(list);
+                    adapter.setOnItemClickListener(new ItemClickListener() {
+                        @Override
+                        public void onRecyclerViewItemClicked(int position, int id) {
+                            if(id==-1){
+                                Log.d("view",adapter.list.get(position).roadAddress);
+                            }else{
+                                Log.d("btn",adapter.list.get(position).roadAddress);
+                            }
+                        }
+                    });
                     initRecyclerView();
                     view.setAdapter(adapter);
                 }
@@ -103,5 +114,6 @@ public class MapActivity extends NMapActivity {
         view.setLayoutManager(manager);
         view.addItemDecoration(new DividerItemDecoration(view.getContext(),manager.getOrientation()));
     }
+
 
 }

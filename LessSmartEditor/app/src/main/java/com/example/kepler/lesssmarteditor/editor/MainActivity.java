@@ -14,7 +14,8 @@ import com.example.kepler.lesssmarteditor.component.TextComponent;
 import com.example.kepler.lesssmarteditor.component.Type;
 import com.example.kepler.lesssmarteditor.editor.recyclerview.ComponentAdapter;
 import com.example.kepler.lesssmarteditor.editor.recyclerview.ItemTouchHelperCallback;
-import com.example.kepler.lesssmarteditor.navermap.MapActivity;
+import com.example.kepler.lesssmarteditor.map.MapActivity;
+import com.example.kepler.lesssmarteditor.map.z_view.Z_MapActivity;
 
 public class MainActivity extends AppCompatActivity {
     RecyclerView view;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickedAddMap(View v){    //삭제기능
-        Intent intent = new Intent(this,MapActivity.class);
+        Intent intent = new Intent(this,Z_MapActivity.class);
         startActivity(intent);
     }
     private void notifyToAdapter(){
