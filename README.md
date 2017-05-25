@@ -65,4 +65,3 @@
 * Map SDK 사용, SQLite 요구사항 제외하고 완료
 * Editor 와 Map 2개의 Activity별로 역할 분리 완료
 
-
