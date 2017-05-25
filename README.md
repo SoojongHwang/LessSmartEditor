@@ -57,4 +57,12 @@
 ## 05.24
 
 * Naver Map 구현부분 MVP 패턴 적용하여 설계 및 개발
-* ​
+
+## 05.25
+
+* 해야할일
+  * Map Component 설계
+  * 사진첩에서 사진가져오기
+  * image -> Glide 적용
+  * database 적용
+
