@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.kepler.lesssmarteditor.editor.view.EditorActivity"
+    android:weightSum="1.0"
+    >
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/editor_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.9">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:orientation="horizontal"
+        android:weightSum="1.0">
+
+        <Button
+            android:id="@+id/btn_add_component"
+            android:text="컴포넌트 추가"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.666"/>
+        <Button
+            android:id="@+id/btn_save"
+            android:text="저장"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.333"/>
+
+    </LinearLayout>
+
+</LinearLayout>
