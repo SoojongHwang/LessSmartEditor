@@ -60,9 +60,9 @@
 
 ## 05.25
 
-* 해야할일
-  * Map Component 설계
-  * 사진첩에서 사진가져오기
-  * image -> Glide 적용
-  * database 적용
+`(BUG_05) 맨 처음에 지도가 삽입될 시에 지도의 크기가 작게 그려짐`
+
+* Map SDK 사용, SQLite 요구사항 제외하고 완료
+* Editor 와 Map 2개의 Activity별로 역할 분리 완료
+
 
