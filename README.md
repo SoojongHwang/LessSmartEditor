@@ -65,3 +65,9 @@
 * Map SDK 사용, SQLite 요구사항 제외하고 완료
 * Editor 와 Map 2개의 Activity별로 역할 분리 완료
 
+
+![GSON](https://github.com/SoojongHwang/LessSmartEditor/blob/master/Study/images/gson.jpg?raw=false)
+
+> Adapter상의 List 를 Json 으로 변환하여 저장하여 다시 복구해주면 저장 및 불러오기가 완료될거라 생각한다.
+>
+> 하지만 list에 generic type의 Component 들이 들어가있으므로 어떤 Component인지 알기위하여 deSerialize 하는 도중에 downCasting을 해주는 방법을 찾아보아야겠다.
