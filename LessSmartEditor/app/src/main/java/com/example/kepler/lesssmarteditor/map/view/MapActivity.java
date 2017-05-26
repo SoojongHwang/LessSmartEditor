@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,6 +50,7 @@ public class MapActivity extends NMapActivity implements MapView {
         initNMap();
         mDialog = new ProgressDialog(this);
         mDialog.setMessage("잠시만기다려주세요");
+        Log.d("###","this is for test");
     }
 
     @OnClick(R.id.btn_search)
