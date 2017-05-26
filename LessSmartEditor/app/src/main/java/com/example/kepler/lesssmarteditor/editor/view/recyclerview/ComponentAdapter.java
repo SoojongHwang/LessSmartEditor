@@ -32,7 +32,7 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
     @Override
     public ComponentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ComponentViewHolder vh = null;
-        Type type = Type.values()[viewType];
+        Type type = Type.getType(viewType);
         switch (type) {
             case TEXT:
                 vh = TextViewHolder.getInstance(parent, new EditTextChangeListener());
@@ -61,7 +61,7 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
 
     @Override
     public int getItemViewType(int position) {
-        return list.get(position).getType().getTypeValue();
+        return list.get(position).getType().getValue();
     }
 
 

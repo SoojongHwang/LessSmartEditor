@@ -12,7 +12,15 @@ public enum Type {
         this.typeValue = type;
     }
 
-    public int getTypeValue() {
+    public int getValue() {
         return typeValue;
+    }
+
+    public static Type getType(int value){
+        for(Type type:Type.values()){
+            if(value == type.getValue())
+                return type;
+        }
+        return null;
     }
 }
