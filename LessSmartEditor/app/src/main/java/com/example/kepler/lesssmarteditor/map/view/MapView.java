@@ -10,9 +10,11 @@ import java.util.List;
 
 public interface MapView {
     void showRecyclerView(List<Item> list);
+
     void makeToast(String str);
 
     void showDialog();
+
     void dismissDialog();
 
     void addMap(Item item);

@@ -52,7 +52,7 @@ public class MapActivity extends NMapActivity implements MapView {
     }
 
     @OnClick(R.id.btn_search)
-    public void onClickedSearch(View v){
+    public void onClickedSearch(View v) {
         mPresenter.requestSite(et_address.getText().toString());
     }
 
@@ -65,7 +65,7 @@ public class MapActivity extends NMapActivity implements MapView {
 
     @Override
     public void makeToast(String str) {
-        Toast.makeText(getApplicationContext(),str,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -81,12 +81,12 @@ public class MapActivity extends NMapActivity implements MapView {
     @Override
     public void addMap(Item item) {
         Intent intent = new Intent();
-        intent.putExtra("data",item);
+        intent.putExtra("data", item);
         setResult(MapActivity.RESULT_OK, intent);
         finish();
     }
 
-    private void initNMap(){
+    private void initNMap() {
         mMapView.setClientId(clientId);
         mMapView.setClickable(true);
         mMapView.setEnabled(true);
