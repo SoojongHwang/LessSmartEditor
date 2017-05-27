@@ -1,4 +1,4 @@
-package com.example.kepler.lesssmarteditor.editor.model.domain;
+package com.example.kepler.lesssmarteditor.editor.model.component.domain;
 
 public class BaseComponent {
     private Type type;

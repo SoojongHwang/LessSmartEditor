@@ -20,10 +20,10 @@ public class MapPresenterImpl implements MapPresenter {
 
     @Override
     public void requestSite(String str) {
-        mMapView.showDialog();
+        mMapView.showProgressDialog();
         mMapService = new MapService(this);
         mMapService.callSearchAPI(str);
-        mMapView.dismissDialog();
+        mMapView.dismissProgressDialog();
     }
 
     @Override

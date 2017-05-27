@@ -1,4 +1,4 @@
-package com.example.kepler.lesssmarteditor.editor.model.domain;
+package com.example.kepler.lesssmarteditor.editor.model.component.domain;
 
 /**
  * Created by Kepler on 2017-05-20.

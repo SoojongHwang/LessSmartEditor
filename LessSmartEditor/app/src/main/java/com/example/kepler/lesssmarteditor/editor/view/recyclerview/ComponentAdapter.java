@@ -3,13 +3,16 @@ package com.example.kepler.lesssmarteditor.editor.view.recyclerview;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.kepler.lesssmarteditor.editor.model.domain.BaseComponent;
-import com.example.kepler.lesssmarteditor.editor.model.domain.ImageComponent;
-import com.example.kepler.lesssmarteditor.editor.model.domain.MapComponent;
-import com.example.kepler.lesssmarteditor.editor.model.domain.TextComponent;
-import com.example.kepler.lesssmarteditor.editor.model.domain.Type;
+import com.example.kepler.lesssmarteditor.R;
+import com.example.kepler.lesssmarteditor.editor.model.component.domain.BaseComponent;
+import com.example.kepler.lesssmarteditor.editor.model.component.domain.ImageComponent;
+import com.example.kepler.lesssmarteditor.editor.model.component.domain.MapComponent;
+import com.example.kepler.lesssmarteditor.editor.model.component.domain.TextComponent;
+import com.example.kepler.lesssmarteditor.editor.model.component.domain.Type;
 import com.example.kepler.lesssmarteditor.editor.view.recyclerview.viewholder.ImageViewHolder;
 import com.example.kepler.lesssmarteditor.editor.view.recyclerview.viewholder.MapViewHolder;
 import com.example.kepler.lesssmarteditor.editor.view.recyclerview.viewholder.TextViewHolder;
@@ -35,13 +38,16 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
         Type type = Type.getType(viewType);
         switch (type) {
             case TEXT:
-                vh = TextViewHolder.getInstance(parent, new EditTextChangeListener());
+                View text = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_text,parent, false);
+                vh = new TextViewHolder(text, new EditTextChangeListener());
                 break;
             case IMAGE:
-                vh = ImageViewHolder.getInstance(parent);
+                View image = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_image, parent, false);
+                vh = new ImageViewHolder(image);
                 break;
             case MAP:
-                vh = MapViewHolder.getInstance(parent);
+                View map = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_map, parent, false);
+                vh = new MapViewHolder(map);
                 break;
         }
         return vh;

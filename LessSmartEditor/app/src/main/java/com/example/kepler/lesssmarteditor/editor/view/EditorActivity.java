@@ -2,6 +2,7 @@ package com.example.kepler.lesssmarteditor.editor.view;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,9 +16,9 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.kepler.lesssmarteditor.R;
-import com.example.kepler.lesssmarteditor.editor.model.domain.ImageComponent;
-import com.example.kepler.lesssmarteditor.editor.model.domain.MapComponent;
-import com.example.kepler.lesssmarteditor.editor.model.domain.TextComponent;
+import com.example.kepler.lesssmarteditor.editor.model.component.domain.ImageComponent;
+import com.example.kepler.lesssmarteditor.editor.model.component.domain.MapComponent;
+import com.example.kepler.lesssmarteditor.editor.model.component.domain.TextComponent;
 import com.example.kepler.lesssmarteditor.editor.presenter.EditorPresenter;
 import com.example.kepler.lesssmarteditor.editor.presenter.EditorPresenterImpl;
 import com.example.kepler.lesssmarteditor.editor.view.recyclerview.ComponentAdapter;
@@ -37,10 +38,12 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     @BindView(R.id.btn_save)
     Button btn_save;
 
-    EditorPresenter mPresenter;
-    Dialog mDialog;
+    private Dialog mSelectDialog;
+    private ProgressDialog mProgressDialog;
 
-    ComponentAdapter adapter;
+    private ComponentAdapter adapter;
+    private EditorPresenter mPresenter;
+
     final String[] str = {"글", "그림", "지도"};
     static final int REQ_CODE_IMAGE = 0;
     static final int REQ_CODE_MAP = 100;
@@ -73,11 +76,21 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         notifyToAdapter();
     }
 
+    @Override
+    public void showProgressDialog() {
+        mProgressDialog.show();
+    }
+
+    @Override
+    public void dismissProgressDialog() {
+        mProgressDialog.dismiss();
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQ_CODE_IMAGE){
-            if(resultCode == Activity.RESULT_OK){
+        if (requestCode == REQ_CODE_IMAGE) {
+            if (resultCode == Activity.RESULT_OK) {
                 mPresenter.addImage(data.getData());
             }
         }
@@ -93,7 +106,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
 
     @OnClick(R.id.btn_add_component)
     public void onClickedAddComponent(View v) {
-        mDialog.show();
+        mSelectDialog.show();
     }
 
     private void init() {
@@ -103,7 +116,9 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         itemTouchHelper.attachToRecyclerView(eView);
         eView.setLayoutManager(new LinearLayoutManager(this));
         eView.setAdapter(adapter);
-        mDialog = makeDialog();
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("잠시만기다려주세요");
+        mSelectDialog = makeDialog();
     }
 
     private void notifyToAdapter() {
@@ -131,7 +146,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                                 break;
                             case 2:
                                 Intent mapIntent = new Intent(EditorActivity.this, MapActivity.class);
-                                startActivityForResult(mapIntent,REQ_CODE_MAP);
+                                startActivityForResult(mapIntent, REQ_CODE_MAP);
                                 break;
                         }
                     }

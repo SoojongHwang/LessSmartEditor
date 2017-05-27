@@ -13,9 +13,9 @@ public interface MapView {
 
     void makeToast(String str);
 
-    void showDialog();
+    void showProgressDialog();
 
-    void dismissDialog();
+    void dismissProgressDialog();
 
     void addMap(Item item);
 

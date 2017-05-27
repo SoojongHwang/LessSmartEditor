@@ -38,7 +38,7 @@ public class MapActivity extends NMapActivity implements MapView {
     final private String clientId = "hOBAjjmz9dUkwoGrp6pS";
     final private MapPresenter mPresenter = new MapPresenterImpl(this);
     final private LinearLayoutManager mManager = new LinearLayoutManager(this);
-    ProgressDialog mDialog;
+    private ProgressDialog mProgressDialog;
     private SiteAdapter mAdapter;
 
     @Override
@@ -47,10 +47,8 @@ public class MapActivity extends NMapActivity implements MapView {
         setContentView(R.layout.activity_map);
 
         ButterKnife.bind(this);
+        initActivity();
         initNMap();
-        mDialog = new ProgressDialog(this);
-        mDialog.setMessage("잠시만기다려주세요");
-        Log.d("###","this is for test");
     }
 
     @OnClick(R.id.btn_search)
@@ -71,13 +69,13 @@ public class MapActivity extends NMapActivity implements MapView {
     }
 
     @Override
-    public void showDialog() {
-        mDialog.show();
+    public void showProgressDialog() {
+        mProgressDialog.show();
     }
 
     @Override
-    public void dismissDialog() {
-        mDialog.dismiss();
+    public void dismissProgressDialog() {
+        mProgressDialog.dismiss();
     }
 
     @Override
@@ -87,7 +85,10 @@ public class MapActivity extends NMapActivity implements MapView {
         setResult(MapActivity.RESULT_OK, intent);
         finish();
     }
-
+    private void initActivity(){
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("잠시만기다려주세요");
+    }
     private void initNMap() {
         mMapView.setClientId(clientId);
         mMapView.setClickable(true);

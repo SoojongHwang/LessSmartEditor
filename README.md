@@ -71,3 +71,26 @@
 > Adapter상의 List 를 Json 으로 변환하여 저장하여 다시 복구해주면 저장 및 불러오기가 완료될거라 생각한다.
 >
 > 하지만 list에 generic type의 Component 들이 들어가있으므로 어떤 Component인지 알기위하여 deSerialize 하는 도중에 downCasting을 해주는 방법을 찾아보아야겠다.
+
+
+
+## 05.26
+
+* Json <-> Object 양방향 변환완료 (Superclass 로 up-casting한 자료도 Deserialize 가능)
+
+
+
+## 05.27
+
+* Database 기능
+
+* 구조 세분화
+
+* Model의 기능 분리 
+
+  > Model 	- ComponentManager
+  >
+  > ​		- DatabaseManager
+
+
+`BUG_06 데이터베이스 cursor 가 제대로 넘어오는지 확인할 것`

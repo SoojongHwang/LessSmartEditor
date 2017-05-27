@@ -1,15 +1,13 @@
 package com.example.kepler.lesssmarteditor.editor.view.recyclerview.viewholder;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.kepler.lesssmarteditor.R;
-import com.example.kepler.lesssmarteditor.editor.model.domain.MapComponent;
+import com.example.kepler.lesssmarteditor.editor.model.component.domain.MapComponent;
 import com.example.kepler.lesssmarteditor.editor.view.recyclerview.ComponentViewHolder;
 
 /**
@@ -22,12 +20,7 @@ public class MapViewHolder extends ComponentViewHolder<MapComponent>{
     private TextView tv_address;
     private Context mContext;
 
-    public static MapViewHolder getInstance(ViewGroup parent){
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_map, parent, false);
-        return new MapViewHolder(view);
-    }
-
-    private MapViewHolder(View itemView) {
+    public MapViewHolder(View itemView) {
         super(itemView);
         mContext = itemView.getContext();
         mImageView = (ImageView)itemView.findViewById(R.id.view_map_iv_imageView);

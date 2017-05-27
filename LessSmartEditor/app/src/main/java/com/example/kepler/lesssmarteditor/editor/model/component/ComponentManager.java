@@ -1,11 +1,11 @@
-package com.example.kepler.lesssmarteditor.editor.model;
+package com.example.kepler.lesssmarteditor.editor.model.component;
 
 import android.net.Uri;
 
-import com.example.kepler.lesssmarteditor.editor.model.domain.ImageComponent;
-import com.example.kepler.lesssmarteditor.editor.model.domain.MapComponent;
-import com.example.kepler.lesssmarteditor.editor.model.domain.TextComponent;
-import com.example.kepler.lesssmarteditor.editor.model.domain.Type;
+import com.example.kepler.lesssmarteditor.editor.model.component.domain.ImageComponent;
+import com.example.kepler.lesssmarteditor.editor.model.component.domain.MapComponent;
+import com.example.kepler.lesssmarteditor.editor.model.component.domain.TextComponent;
+import com.example.kepler.lesssmarteditor.editor.model.component.domain.Type;
 import com.example.kepler.lesssmarteditor.map.model.Item;
 
 /**

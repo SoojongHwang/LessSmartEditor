@@ -1,4 +1,4 @@
-package com.example.kepler.lesssmarteditor.editor.model.domain;
+package com.example.kepler.lesssmarteditor.editor.model.component.domain;
 
 /**
  * Created by Kepler on 2017-05-20.
@@ -18,7 +18,7 @@ public enum Type {
 
     public static Type getType(int value){
         for(Type type:Type.values()){
-            if(value == type.getValue())
+            if(type.getValue() == value)
                 return type;
         }
         return null;
