@@ -18,7 +18,7 @@ public interface MapView {
     void dismissProgressDialog();
 
     void addMap(Item item);
-
+    void hideKeyBoard();
 
     //for NMapView
 //    void setMapCenter();

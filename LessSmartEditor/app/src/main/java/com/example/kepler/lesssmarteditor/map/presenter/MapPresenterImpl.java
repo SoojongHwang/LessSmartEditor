@@ -23,7 +23,6 @@ public class MapPresenterImpl implements MapPresenter {
         mMapView.showProgressDialog();
         mMapService = new MapService(this);
         mMapService.callSearchAPI(str);
-        mMapView.dismissProgressDialog();
     }
 
     @Override
@@ -38,11 +37,13 @@ public class MapPresenterImpl implements MapPresenter {
 
     @Override
     public void notifyAPIResult(List<Item> list) {
+        mMapView.dismissProgressDialog();
         mMapView.showRecyclerView(list);
     }
 
     @Override
     public void notifyAPIFailed(String str) {
+        mMapView.dismissProgressDialog();
         mMapView.makeToast(str);
     }
 

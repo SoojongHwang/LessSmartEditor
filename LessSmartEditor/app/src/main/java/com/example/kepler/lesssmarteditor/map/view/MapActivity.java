@@ -1,12 +1,14 @@
 package com.example.kepler.lesssmarteditor.map.view;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -40,6 +42,7 @@ public class MapActivity extends NMapActivity implements MapView {
     final private LinearLayoutManager mManager = new LinearLayoutManager(this);
     private ProgressDialog mProgressDialog;
     private SiteAdapter mAdapter;
+    InputMethodManager imm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,7 @@ public class MapActivity extends NMapActivity implements MapView {
     @OnClick(R.id.btn_search)
     public void onClickedSearch(View v) {
         mPresenter.requestSite(et_address.getText().toString());
+        hideKeyBoard();
     }
 
     @Override
@@ -85,7 +89,14 @@ public class MapActivity extends NMapActivity implements MapView {
         setResult(MapActivity.RESULT_OK, intent);
         finish();
     }
+
+    @Override
+    public void hideKeyBoard() {
+        imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(),0);
+    }
+
     private void initActivity(){
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("잠시만기다려주세요");
     }
