@@ -55,6 +55,8 @@ public class DatabaseManager {
         String content = cursor.getString(2);
         List<BaseComponent> list = mJsonHelper.Json2List(content);
 
+        if(title.equals("제목없는 글"))
+            title = "";
         ContentWithTitle cwt = new ContentWithTitle(title, list);
         return cwt;
     }

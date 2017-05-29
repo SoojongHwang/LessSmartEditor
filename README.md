@@ -110,3 +110,8 @@
 
 > Usecase 별 Test 필요. (요구사항별로 flow 를 따라가며 체크리스트 해보자)
 
+## 05.30
+
+* BUG_06 해결 - ItemTouchHelper를 detach 한 후에 다시 set 해주어야함 (listener 2개가 달려서 이상동작)
+
+  ​

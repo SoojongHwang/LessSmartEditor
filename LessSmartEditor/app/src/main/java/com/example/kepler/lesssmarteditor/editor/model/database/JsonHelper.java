@@ -41,7 +41,8 @@ public class JsonHelper{
 
         List<BaseComponent> list = new ArrayList<>();
         for(int i=0; i<arr.size(); i++){
-            BaseComponent baseComponent = gson.fromJson(arr.get(i),BaseComponent.class);
+            JsonElement current = arr.get(i);
+            BaseComponent baseComponent = gson.fromJson(current,BaseComponent.class);
             list.add(baseComponent);
         }
         return list;

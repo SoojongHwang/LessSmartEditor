@@ -18,6 +18,8 @@ import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.view
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.viewholder.TextViewHolder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -26,15 +28,15 @@ import java.util.List;
 
 public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
         implements ItemTouchHelperCallback.ItemTouchHelperListener {
-    public List<BaseComponent> cList;
+    private List<BaseComponent> cList;
 
     public ComponentAdapter() {
         cList = new ArrayList<>();
     }
 
     public ComponentAdapter(List<BaseComponent> list) {
-        this.cList = list;
-        notifyDataSetChanged();
+        cList = new ArrayList<>();
+        cList.addAll(list);
     }
 
     @Override
