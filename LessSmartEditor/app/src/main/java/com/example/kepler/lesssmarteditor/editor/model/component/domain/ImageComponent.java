@@ -7,14 +7,14 @@ import android.net.Uri;
  */
 
 public class ImageComponent extends BaseComponent {
-    private Uri imageUrl;
+    private String filePath;
 
-    public ImageComponent(Type type, Uri imageUrl) {
+    public ImageComponent(Type type, String imageUrl) {
         super(type);
-        this.imageUrl = imageUrl;
+        this.filePath = imageUrl;
     }
 
-    public Uri getImageUrl() {
-        return imageUrl;
+    public String getImageUrl() {
+        return filePath;
     }
 }

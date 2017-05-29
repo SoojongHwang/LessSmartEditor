@@ -165,7 +165,8 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQ_CODE_IMAGE) {
             if (resultCode == Activity.RESULT_OK) {
-                mPresenter.onImageAddSelected(data.getData());
+                String path = data.getData().toString();
+                mPresenter.onImageAddSelected(path);
             }
         }
         if (requestCode == REQ_CODE_MAP) {

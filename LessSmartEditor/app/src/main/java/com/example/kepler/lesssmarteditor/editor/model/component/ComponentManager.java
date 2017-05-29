@@ -19,8 +19,8 @@ public class ComponentManager {
         return new TextComponent(Type.TEXT, "");
     }
 
-    public ImageComponent getImageInstance(Uri uri) {
-        return new ImageComponent(Type.IMAGE, uri);
+    public ImageComponent getImageInstance(String path) {
+        return new ImageComponent(Type.IMAGE, path);
     }
 
     public MapComponent getMapInstance(Item item) {

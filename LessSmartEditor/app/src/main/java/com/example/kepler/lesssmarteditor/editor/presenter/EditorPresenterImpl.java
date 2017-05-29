@@ -38,8 +38,8 @@ public class EditorPresenterImpl implements EditorPresenter{
     }
 
     @Override
-    public void onImageAddSelected(Uri uri) {
-        ImageComponent ic= mComponentManager.getImageInstance(uri);
+    public void onImageAddSelected(String path) {
+        ImageComponent ic= mComponentManager.getImageInstance(path);
         mEditorView.addSingleImageToAdapter(ic);
     }
 

@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface EditorPresenter {
     void onTextAddSelected();
-    void onImageAddSelected(Uri uri);
+    void onImageAddSelected(String path);
     void onMapAddSelected(Item item);
 
     void onClickedLoadButton();
