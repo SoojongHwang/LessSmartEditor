@@ -13,11 +13,13 @@ import java.util.List;
  */
 
 public interface EditorView {
-    void addTextToAdapter(TextComponent textComponent);
-    void addImageToAdapter(ImageComponent imageComponent);
-    void addMapToAdapter(MapComponent mapComponent);
+    void addSingleTextToAdapter(TextComponent textComponent);
+    void addSingleImageToAdapter(ImageComponent imageComponent);
+    void addSingleMapToAdapter(MapComponent mapComponent);
 
+    void setTitle(String title);
+    void dismissSlidingPage();
 
     void showComponents(List<BaseComponent> cList);
-    void showTitle(List<TitleWithId> tList);
+    void showTitles(List<TitleWithId> tList);
 }

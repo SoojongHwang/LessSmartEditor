@@ -26,14 +26,15 @@ import java.util.List;
 
 public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
         implements ItemTouchHelperCallback.ItemTouchHelperListener {
-    public List<BaseComponent> list;
+    public List<BaseComponent> cList;
 
     public ComponentAdapter() {
-        list = new ArrayList<>();
+        cList = new ArrayList<>();
     }
 
     public ComponentAdapter(List<BaseComponent> list) {
-        this.list = list;
+        this.cList = list;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -61,34 +62,34 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
     public void onBindViewHolder(ComponentViewHolder holder, int position) {
         if (holder instanceof TextViewHolder) {
             ((TextViewHolder) holder).mListener.updatePosition(holder.getAdapterPosition());
-            ((TextViewHolder) holder).bindView((TextComponent) list.get(position));
+            ((TextViewHolder) holder).bindView((TextComponent) cList.get(position));
         } else if (holder instanceof ImageViewHolder) {
-            ((ImageViewHolder) holder).bindView((ImageComponent) list.get(position));
+            ((ImageViewHolder) holder).bindView((ImageComponent) cList.get(position));
         } else {
-            ((MapViewHolder) holder).bindView((MapComponent) list.get(position));
+            ((MapViewHolder) holder).bindView((MapComponent) cList.get(position));
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        return list.get(position).getType().getValue();
+        return cList.get(position).getType().getValue();
     }
 
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return cList.size();
     }
 
     @Override
     public boolean onItemMove(int before, int after) {
-        if (before < 0 || before >= list.size() || after < 0 || after >= list.size()) {
+        if (before < 0 || before >= cList.size() || after < 0 || after >= cList.size()) {
             return false;
         }
 
-        BaseComponent target = list.get(before);
-        list.remove(before);
-        list.add(after, target);
+        BaseComponent target = cList.get(before);
+        cList.remove(before);
+        cList.add(after, target);
 
         notifyItemMoved(before, after);
         return true;
@@ -96,17 +97,17 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
 
     @Override
     public void onItemRemove(int position) {
-        if (!list.isEmpty())
-            list.remove(position);
+        if (!cList.isEmpty())
+            cList.remove(position);
         notifyDataSetChanged();
     }
 
     public void addComponent(BaseComponent component) {
-        list.add(component);
+        cList.add(component);
     }
 
     public List<BaseComponent> getList() {
-        return list;
+        return cList;
     }
 
 
@@ -123,8 +124,8 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (list.get(position) instanceof TextComponent)
-                ((TextComponent) list.get(position)).setContents(s.toString());
+            if (cList.get(position) instanceof TextComponent)
+                ((TextComponent) cList.get(position)).setContents(s.toString());
         }
 
         @Override

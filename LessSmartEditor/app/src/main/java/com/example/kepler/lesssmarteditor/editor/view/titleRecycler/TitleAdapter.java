@@ -1,7 +1,6 @@
 package com.example.kepler.lesssmarteditor.editor.view.titleRecycler;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +19,11 @@ import butterknife.ButterKnife;
  * Created by Kepler on 2017-05-29.
  */
 
-public class TitleAdapter extends RecyclerView.Adapter<TitleAdapter.TitleViewHolder>{
+public class TitleAdapter extends RecyclerView.Adapter<TitleAdapter.TitleViewHolder> {
     EditorPresenter mPresenter;
     List<TitleWithId> list;
 
-    public TitleAdapter(EditorPresenter presenter,List<TitleWithId> list) {
+    public TitleAdapter(EditorPresenter presenter, List<TitleWithId> list) {
         this.mPresenter = presenter;
         this.list = list;
     }
@@ -46,7 +45,7 @@ public class TitleAdapter extends RecyclerView.Adapter<TitleAdapter.TitleViewHol
         return list.size();
     }
 
-    public class TitleViewHolder extends RecyclerView.ViewHolder{
+    public class TitleViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.view_title_tv)
         TextView tv;
 
@@ -57,7 +56,8 @@ public class TitleAdapter extends RecyclerView.Adapter<TitleAdapter.TitleViewHol
             tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mPresenter.getComponentListFromDatabase(list.get(getAdapterPosition()).id) ;
+                    int id = list.get(getAdapterPosition()).id;
+                    mPresenter.onClickedTitle(id);
                 }
             });
         }

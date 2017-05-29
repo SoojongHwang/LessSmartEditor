@@ -12,15 +12,11 @@ import java.util.List;
  */
 
 public interface EditorPresenter {
-    //from activity
-    void selectText();
-    void addImage(Uri uri);
-    void addMap(Item item);
+    void onTextAddSelected();
+    void onImageAddSelected(Uri uri);
+    void onMapAddSelected(Item item);
 
-    //from DB
-    void getTitleListFromDatabase();
-    void getComponentListFromDatabase(int id);
-
-    //to DB
-    void saveComponentListToDatabase(String title, List<BaseComponent> list);
+    void onClickedLoadButton();
+    void onClickedTitle(int id);
+    void onClickedSaveButton(String title, List<BaseComponent> list);
 }

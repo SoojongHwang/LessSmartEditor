@@ -8,6 +8,7 @@ import com.example.kepler.lesssmarteditor.editor.model.component.domain.BaseComp
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.ImageComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.MapComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.TextComponent;
+import com.example.kepler.lesssmarteditor.editor.model.database.ContentWithTitle;
 import com.example.kepler.lesssmarteditor.editor.model.database.DatabaseManager;
 import com.example.kepler.lesssmarteditor.editor.model.database.TitleWithId;
 import com.example.kepler.lesssmarteditor.editor.view.EditorView;
@@ -31,38 +32,39 @@ public class EditorPresenterImpl implements EditorPresenter{
     }
 
     @Override
-    public void selectText() {
+    public void onTextAddSelected() {
         TextComponent tc = mComponentManager.getTextInstance();
-        mEditorView.addTextToAdapter(tc);
+        mEditorView.addSingleTextToAdapter(tc);
     }
 
     @Override
-    public void addImage(Uri uri) {
+    public void onImageAddSelected(Uri uri) {
         ImageComponent ic= mComponentManager.getImageInstance(uri);
-        mEditorView.addImageToAdapter(ic);
+        mEditorView.addSingleImageToAdapter(ic);
     }
 
-
     @Override
-    public void addMap(Item item) {
+    public void onMapAddSelected(Item item) {
         MapComponent mc = mComponentManager.getMapInstance(item);
-        mEditorView.addMapToAdapter(mc);
+        mEditorView.addSingleMapToAdapter(mc);
     }
 
     @Override
-    public void getTitleListFromDatabase() {
+    public void onClickedLoadButton() {
         List<TitleWithId> list = mDatabaseManager.getTitleList();
-        mEditorView.showTitle(list);
+        mEditorView.showTitles(list);
     }
 
     @Override
-    public void getComponentListFromDatabase(int id) {
-        List<BaseComponent> list = mDatabaseManager.getComponentList(id);
-        mEditorView.showComponents(list);
+    public void onClickedTitle(int titleId) {
+        ContentWithTitle cwt = mDatabaseManager.getComponentList(titleId);
+        mEditorView.showComponents(cwt.list);
+        mEditorView.setTitle(cwt.title);
+        mEditorView.dismissSlidingPage();
     }
 
     @Override
-    public void saveComponentListToDatabase(String title, List<BaseComponent> list) {
+    public void onClickedSaveButton(String title, List<BaseComponent> list) {
         mDatabaseManager.saveToDatabase(title, list);
     }
 

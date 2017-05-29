@@ -25,33 +25,38 @@ public class DatabaseManager {
         mJsonHelper = new JsonHelper();
     }
 
-    //
-    public void saveToDatabase(String title, List<BaseComponent> list){
-        String content  = mJsonHelper.List2Json(list);
-        String query = "INSERT INTO row VALUES(null, '"+title+"', '"+content+"');";
+    public void saveToDatabase(String title, List<BaseComponent> list) {
+        String content = mJsonHelper.List2Json(list);
+        String query = "INSERT INTO row VALUES(null, '" + title + "', '" + content + "');";
         mDb.execSQL(query);
     }
-    public List<TitleWithId> getTitleList(){
+
+    public List<TitleWithId> getTitleList() {
         String query = "SELECT * FROM row";
-        Cursor cursor = mDb.rawQuery(query,null);
+        Cursor cursor = mDb.rawQuery(query, null);
 
         List<TitleWithId> list = new ArrayList<>();
 
-        while(cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             TitleWithId twi = new TitleWithId(cursor.getInt(0), cursor.getString(1));
             list.add(twi);
         }
 
         return list;
     }
-    public List<BaseComponent> getComponentList(int id){
-        String query = "SELECT * FROM row where _id = "+id+";";
-        Cursor cursor = mDb.rawQuery(query,null);
+
+    public ContentWithTitle getComponentList(int id) {
+        String query = "SELECT * FROM row where _id = " + id + ";";
+        Cursor cursor = mDb.rawQuery(query, null);
 
         cursor.moveToFirst();
+
+        String title = cursor.getString(1);
         String content = cursor.getString(2);
         List<BaseComponent> list = mJsonHelper.Json2List(content);
-        return list;
+
+        ContentWithTitle cwt = new ContentWithTitle(title, list);
+        return cwt;
     }
 
 }

@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.example.kepler.lesssmarteditor.R;
@@ -47,13 +48,14 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     Button btn_addComponent;
     @BindView(R.id.btn_save)
     Button btn_save;
-
+    @BindView(R.id.editor_et_title)
+    EditText et_title;
     private Dialog mSelectDialog;
     private ProgressDialog mProgressDialog;
 
     private ComponentAdapter adapter;
     private EditorPresenter mPresenter;
-
+    ItemTouchHelper itemTouchHelper;
 
     final String[] str = {"글", "그림", "지도"};
     static final int REQ_CODE_IMAGE = 0;
@@ -76,35 +78,73 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         init();
     }
 
+    private void init() {
+        mPresenter = new EditorPresenterImpl(this);
+        initRecyclerView();
+        initSlidingPage();
+
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("잠시만기다려주세요");
+        mSelectDialog = makeSelectDialog();
+    }
+
+    private void initRecyclerView() {
+        adapter = new ComponentAdapter();
+        itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(adapter));
+        itemTouchHelper.attachToRecyclerView(eView);
+        eView.setLayoutManager(new LinearLayoutManager(this));
+        eView.setAdapter(adapter);
+    }
+
+    private void initSlidingPage() {
+        page = (LinearLayout) findViewById(R.id.editor_open);
+        translateLeftAnim = AnimationUtils.loadAnimation(this, R.anim.translate_left);
+        translateRightAnim = AnimationUtils.loadAnimation(this, R.anim.translate_right);
+        SlidingPageAnimationListener animListener = new SlidingPageAnimationListener();
+        translateLeftAnim.setAnimationListener(animListener);
+        translateRightAnim.setAnimationListener(animListener);
+    }
 
     @Override
-    public void addTextToAdapter(TextComponent textComponent) {
+    public void addSingleTextToAdapter(TextComponent textComponent) {
         adapter.addComponent(textComponent);
         notifyToAdapter();
     }
 
     @Override
-    public void addImageToAdapter(ImageComponent imageComponent) {
+    public void addSingleImageToAdapter(ImageComponent imageComponent) {
         adapter.addComponent(imageComponent);
         notifyToAdapter();
     }
 
     @Override
-    public void addMapToAdapter(MapComponent mapComponent) {
+    public void addSingleMapToAdapter(MapComponent mapComponent) {
         adapter.addComponent(mapComponent);
         notifyToAdapter();
     }
 
     @Override
+    public void setTitle(String title) {
+        et_title.setText(title);
+    }
+
+    @Override
+    public void dismissSlidingPage() {
+        page.startAnimation(translateRightAnim);
+    }
+
+    @Override
     public void showComponents(List<BaseComponent> cList) {
         adapter = new ComponentAdapter(cList);
+        itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(adapter));
+        itemTouchHelper.attachToRecyclerView(eView);
         eView.setLayoutManager(new LinearLayoutManager(this));
         eView.setAdapter(adapter);
     }
 
     @Override
-    public void showTitle(List<TitleWithId> list) {
-        title_view = (RecyclerView)findViewById(R.id.editor_title_recyclerView);
+    public void showTitles(List<TitleWithId> list) {
+        title_view = (RecyclerView) findViewById(R.id.editor_title_recyclerView);
         titleAdapter = new TitleAdapter(mPresenter, list);
         title_view.setLayoutManager(new LinearLayoutManager(this));
         title_view.setAdapter(titleAdapter);
@@ -115,71 +155,48 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQ_CODE_IMAGE) {
             if (resultCode == Activity.RESULT_OK) {
-                mPresenter.addImage(data.getData());
+                mPresenter.onImageAddSelected(data.getData());
             }
         }
 
         if (requestCode == REQ_CODE_MAP) {
             if (resultCode == Activity.RESULT_OK) {
                 Item item = data.getParcelableExtra("data");
-                mPresenter.addMap(item);
+                mPresenter.onMapAddSelected(item);
             }
         }
     }
-
 
     @OnClick(R.id.btn_add_component)
     public void onClickedAddComponent(View v) {
         mSelectDialog.show();
     }
+
     @OnClick(R.id.btn_save)
-    public void onClickedSaveComponent(View v){
+    public void onClickedSave(View v) {
+        String title = et_title.getText().toString();
         List<BaseComponent> list = adapter.getList();
-        mPresenter.saveComponentListToDatabase("hi",list);
+        mPresenter.onClickedSaveButton(title, list);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.editor_menu,menu);
+        getMenuInflater().inflate(R.menu.editor_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_open){
+        if (item.getItemId() == R.id.action_open) {
             if (isPageOpen) {
                 page.startAnimation(translateRightAnim);
-
             } else {
+                mPresenter.onClickedLoadButton();
                 page.setVisibility(View.VISIBLE);
                 page.startAnimation(translateLeftAnim);
-                mPresenter.getTitleListFromDatabase();
             }
         }
-
         return super.onOptionsItemSelected(item);
-    }
-
-    private void init() {
-        mPresenter = new EditorPresenterImpl(this);
-        adapter = new ComponentAdapter();
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(adapter));
-        itemTouchHelper.attachToRecyclerView(eView);
-        eView.setLayoutManager(new LinearLayoutManager(this));
-        eView.setAdapter(adapter);
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage("잠시만기다려주세요");
-        mSelectDialog = makeDialog();
-
-
-        page = (LinearLayout) findViewById(R.id.editor_open);
-
-        translateLeftAnim = AnimationUtils.loadAnimation(this, R.anim.translate_left);
-        translateRightAnim = AnimationUtils.loadAnimation(this, R.anim.translate_right);
-
-        SlidingPageAnimationListener animListener = new SlidingPageAnimationListener();
-        translateLeftAnim.setAnimationListener(animListener);
-        translateRightAnim.setAnimationListener(animListener);
     }
 
     private void notifyToAdapter() {
@@ -187,7 +204,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         eView.scrollToPosition(adapter.getItemCount() - 1);
     }
 
-    private Dialog makeDialog() {
+    private Dialog makeSelectDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder
                 .setTitle("컴포넌트 추가")
@@ -197,7 +214,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
-                                mPresenter.selectText();
+                                mPresenter.onTextAddSelected();
                                 break;
                             case 1:
                                 Intent imageIntent = new Intent(Intent.ACTION_PICK);
