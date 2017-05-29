@@ -1,5 +1,6 @@
 package com.example.kepler.lesssmarteditor.editor.presenter;
 
+import android.content.Context;
 import android.net.Uri;
 
 import com.example.kepler.lesssmarteditor.editor.model.component.ComponentManager;
@@ -7,6 +8,8 @@ import com.example.kepler.lesssmarteditor.editor.model.component.domain.BaseComp
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.ImageComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.MapComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.TextComponent;
+import com.example.kepler.lesssmarteditor.editor.model.database.DatabaseManager;
+import com.example.kepler.lesssmarteditor.editor.model.database.TitleWithId;
 import com.example.kepler.lesssmarteditor.editor.view.EditorView;
 import com.example.kepler.lesssmarteditor.map.model.Item;
 
@@ -17,39 +20,50 @@ import java.util.List;
  */
 
 public class EditorPresenterImpl implements EditorPresenter{
-    EditorView mEditorView;
-    ComponentManager mManager;
+    private EditorView mEditorView;
+    private ComponentManager mComponentManager;
+    private DatabaseManager mDatabaseManager;
+
     public EditorPresenterImpl(EditorView eView) {
         this.mEditorView = eView;
-        mManager = new ComponentManager();
+        this.mComponentManager = new ComponentManager();
+        this.mDatabaseManager = new DatabaseManager((Context)eView);
     }
 
     @Override
     public void selectText() {
-        TextComponent tc = mManager.getTextInstance();
+        TextComponent tc = mComponentManager.getTextInstance();
         mEditorView.addTextToAdapter(tc);
     }
 
     @Override
     public void addImage(Uri uri) {
-        ImageComponent ic= mManager.getImageInstance(uri);
+        ImageComponent ic= mComponentManager.getImageInstance(uri);
         mEditorView.addImageToAdapter(ic);
     }
 
 
     @Override
     public void addMap(Item item) {
-        MapComponent mc = mManager.getMapInstance(item);
+        MapComponent mc = mComponentManager.getMapInstance(item);
         mEditorView.addMapToAdapter(mc);
     }
 
     @Override
-    public List<BaseComponent> getListFromDatabase() {
-        return null;
+    public void getTitleListFromDatabase() {
+        List<TitleWithId> list = mDatabaseManager.getTitleList();
+        mEditorView.showTitle(list);
     }
 
     @Override
-    public void saveToDatabase(List<BaseComponent> list) {
-
+    public void getComponentListFromDatabase(int id) {
+        List<BaseComponent> list = mDatabaseManager.getComponentList(id);
+        mEditorView.showComponents(list);
     }
+
+    @Override
+    public void saveComponentListToDatabase(String title, List<BaseComponent> list) {
+        mDatabaseManager.saveToDatabase(title, list);
+    }
+
 }

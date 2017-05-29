@@ -1,4 +1,4 @@
-package com.example.kepler.lesssmarteditor.editor.view.recyclerview;
+package com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview;
 
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -13,9 +13,9 @@ import com.example.kepler.lesssmarteditor.editor.model.component.domain.ImageCom
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.MapComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.TextComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.Type;
-import com.example.kepler.lesssmarteditor.editor.view.recyclerview.viewholder.ImageViewHolder;
-import com.example.kepler.lesssmarteditor.editor.view.recyclerview.viewholder.MapViewHolder;
-import com.example.kepler.lesssmarteditor.editor.view.recyclerview.viewholder.TextViewHolder;
+import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.viewholder.ImageViewHolder;
+import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.viewholder.MapViewHolder;
+import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.viewholder.TextViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +26,14 @@ import java.util.List;
 
 public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
         implements ItemTouchHelperCallback.ItemTouchHelperListener {
-    public ArrayList<BaseComponent> list;
+    public List<BaseComponent> list;
 
     public ComponentAdapter() {
         list = new ArrayList<>();
+    }
+
+    public ComponentAdapter(List<BaseComponent> list) {
+        this.list = list;
     }
 
     @Override

@@ -1,41 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.example.kepler.lesssmarteditor.editor.view.EditorActivity"
-    android:weightSum="1.0"
-    >
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/editor_recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.9">
-
-    </android.support.v7.widget.RecyclerView>
+    tools:context="com.example.kepler.lesssmarteditor.editor.view.EditorActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.1"
-        android:orientation="horizontal"
-        android:weightSum="1.0">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1.0"
+        tools:context="com.example.kepler.lesssmarteditor.editor.view.EditorActivity">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            android:weightSum="1"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:text="제목 : "
+                android:gravity="center_horizontal|center_vertical"
+                />
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:focusable="false"/>
+        </LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/editor_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.8">
 
-        <Button
-            android:id="@+id/btn_add_component"
-            android:text="컴포넌트 추가"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.666"/>
-        <Button
-            android:id="@+id/btn_save"
-            android:text="저장"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.333"/>
 
+        </android.support.v7.widget.RecyclerView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            android:orientation="horizontal"
+            android:weightSum="1.0">
+
+            <Button
+                android:id="@+id/btn_add_component"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.666"
+                android:text="컴포넌트 추가" />
+
+            <Button
+                android:id="@+id/btn_save"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.333"
+                android:text="저장" />
+
+
+        </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/editor_open"
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="right"
+        android:orientation="vertical"
+        android:weightSum="1"
+        android:background="#ff5555ff"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.05"
+            android:textSize="20dp"
+            android:text="글 목록"
+            android:gravity="center"
+            />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/editor_title_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.95">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+</FrameLayout>
+
+

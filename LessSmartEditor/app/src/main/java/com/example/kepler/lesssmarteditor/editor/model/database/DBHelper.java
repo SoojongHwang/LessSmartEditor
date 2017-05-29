@@ -9,27 +9,22 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 
 public class DBHelper extends SQLiteOpenHelper {
+    public static final String DB_NAME = "editor";
+    public static final String TABLE_NAME = "row";
 
-    public static final String DATABASE_NAME = "data2";
-    public static final String TABLE_NAME = "comments_table";
     public static final String C_ID = "_id";
     public static final String TITLE = "title";
-    public static final String TYPE = "type";
-    public static final String DETAIL = "description";
-    public static final String TIME = "time";
-    public static final String DATE = "date";
+    public static final String CONTENT = "content";
     public static final int VERSION = 2;
 
-    private final String createDB = "create table if not exists " + TABLE_NAME + " ( "
+    private final String createDB = "create table if not exists " + TABLE_NAME + " ("
             + C_ID + " integer primary key autoincrement, "
             + TITLE + " text, "
-            + DETAIL + " text, "
-            + TYPE + " text, "
-            + TIME + " text, "
-            + DATE + " text)";
+            + CONTENT + " text); ";
 
-    public DBHelper(Context context){
-        super(context, DATABASE_NAME, null, VERSION);
+
+    public DBHelper(Context context) {
+        super(context, DB_NAME, null, VERSION);
     }
 
     @Override

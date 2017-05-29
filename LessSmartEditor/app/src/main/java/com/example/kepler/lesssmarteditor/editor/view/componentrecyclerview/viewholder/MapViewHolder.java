@@ -1,4 +1,4 @@
-package com.example.kepler.lesssmarteditor.editor.view.recyclerview.viewholder;
+package com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.viewholder;
 
 import android.content.Context;
 import android.view.View;
@@ -8,7 +8,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.kepler.lesssmarteditor.R;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.MapComponent;
-import com.example.kepler.lesssmarteditor.editor.view.recyclerview.ComponentViewHolder;
+import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.ComponentViewHolder;
 
 /**
  * Created by Kepler on 2017-05-20.

@@ -18,8 +18,9 @@ public interface EditorPresenter {
     void addMap(Item item);
 
     //from DB
-    List<BaseComponent> getListFromDatabase();
+    void getTitleListFromDatabase();
+    void getComponentListFromDatabase(int id);
 
     //to DB
-    void saveToDatabase(List<BaseComponent> list);
+    void saveComponentListToDatabase(String title, List<BaseComponent> list);
 }
