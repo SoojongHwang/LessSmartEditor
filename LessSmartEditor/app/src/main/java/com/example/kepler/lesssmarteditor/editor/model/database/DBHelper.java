@@ -13,8 +13,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String TABLE_NAME = "row";
 
     public static final String C_ID = "_id";
-    public static final String TITLE = "title";
-    public static final String CONTENT = "content";
+    public static final String TITLE = "_title";
+    public static final String CONTENT = "_content";
     public static final int VERSION = 2;
 
     private final String createDB = "create table if not exists " + TABLE_NAME + " ("

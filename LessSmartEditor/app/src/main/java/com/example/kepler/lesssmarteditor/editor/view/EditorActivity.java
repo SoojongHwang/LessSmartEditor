@@ -95,12 +95,16 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     }
 
     private void initRecyclerView() {
+        et_title.setText("");
         adapter = new ComponentAdapter();
+        eView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
         itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(adapter));
+        itemTouchHelper.attachToRecyclerView(null);
         itemTouchHelper.attachToRecyclerView(eView);
         llm = new LinearLayoutManager(this);
         eView.setLayoutManager(llm);
-        eView.setAdapter(adapter);
+        notifyToAdapter();
     }
 
     private void initSlidingPage() {
@@ -184,13 +188,14 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     @OnClick(R.id.btn_save)
     public void onClickedSave(View v) {
         String title = et_title.getText().toString();
-        if(title.length()==0){
+        if (title.length() == 0) {
             title = "제목없는 글";
         }
-        int id = adapter.getId();
         List<BaseComponent> list = adapter.getList();
-        mPresenter.onClickedSaveButton(id, title, list);
-        Toast.makeText(this, id+ "번 글이 저장되었습니다.", Toast.LENGTH_SHORT).show();
+        boolean isNew = adapter.getIsNew();
+        int id = adapter.getId();
+        mPresenter.onClickedSaveButton(id, title, list, isNew);
+        Toast.makeText(this, title+" 글이 저장되었습니다.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -202,7 +207,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
-        switch (itemId){
+        switch (itemId) {
             case R.id.action_open:
                 if (isPageOpen) {
                     page.startAnimation(translateRightAnim);
@@ -213,15 +218,17 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                 }
                 break;
             case R.id.action_new:
+                initRecyclerView();
                 break;
         }
-                return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
     }
 
     private void notifyToAdapter() {
         adapter.notifyItemInserted(adapter.getItemCount() - 1);
         eView.scrollToPosition(adapter.getItemCount() - 1);
     }
+
     private Dialog makeSelectDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String[] str = {"글", "그림", "지도"};

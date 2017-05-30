@@ -18,5 +18,5 @@ public interface EditorPresenter {
 
     void onClickedLoadButton();
     void onClickedTitle(int id);
-    void onClickedSaveButton(int id, String title, List<BaseComponent> list);
+    void onClickedSaveButton(int id, String title, List<BaseComponent> list, boolean isNew);
 }

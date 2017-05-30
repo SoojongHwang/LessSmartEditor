@@ -25,10 +25,15 @@ public class DatabaseManager {
         mJsonHelper = new JsonHelper();
     }
 
-    public void saveToDatabase(int id, String title, List<BaseComponent> list) {
+    public void saveToDatabase(int id, String title, List<BaseComponent> list, boolean isNew) {
         String content = mJsonHelper.List2Json(list);
-        String query = "INSERT INTO row VALUES(null, '" + title + "', '" + content + "');";
-//        String query = "INSERT OR REPLACE INTO row VALUES('"+id+"', '" + title + "', '" + content + "') ;";
+
+        String query;
+        if(isNew){
+            query = "INSERT INTO row VALUES(null, '" + title + "', '" + content + "');";
+        } else{
+            query = "UPDATE row SET _title = '"+title+"', _content = '"+content+"' WHERE _id = "+id+";";
+        }
         mDb.execSQL(query);
     }
 
@@ -60,13 +65,5 @@ public class DatabaseManager {
             title = "";
         ContentWithTitle cwt = new ContentWithTitle(title, list);
         return cwt;
-    }
-
-    private boolean isExistwithId(int id) {
-        String query = "SELECT EXISTS (SELECT * FROM row WHERE _id = " + id + ");";
-        Cursor cursor = mDb.rawQuery(query, null);
-        cursor.moveToFirst();
-        int result = cursor.getCount();
-        return result == 1 ? true : false;
     }
 }

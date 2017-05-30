@@ -30,14 +30,17 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
         implements ItemTouchHelperCallback.ItemTouchHelperListener {
     private List<BaseComponent> cList;
     private int memoId;
+    private boolean isNew;
 
     public ComponentAdapter() {
+        isNew = true;
         cList = new ArrayList<>();
     }
 
     public ComponentAdapter(int id, List<BaseComponent> list) {
         this.cList = list;
         this.memoId = id;
+        isNew = false;
     }
 
     @Override
@@ -115,7 +118,9 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
     public int getId() {
         return memoId;
     }
-
+    public boolean getIsNew(){
+        return isNew;
+    }
     public class EditTextChangeListener implements TextWatcher {
         private int position;
 

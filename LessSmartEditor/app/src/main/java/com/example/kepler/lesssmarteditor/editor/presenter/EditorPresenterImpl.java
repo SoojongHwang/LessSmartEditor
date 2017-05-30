@@ -64,8 +64,8 @@ public class EditorPresenterImpl implements EditorPresenter{
     }
 
     @Override
-    public void onClickedSaveButton(int id, String title, List<BaseComponent> list) {
-        mDatabaseManager.saveToDatabase(id, title, list);
+    public void onClickedSaveButton(int id, String title, List<BaseComponent> list, boolean isNew) {
+        mDatabaseManager.saveToDatabase(id, title, list, isNew);
     }
 
 }
