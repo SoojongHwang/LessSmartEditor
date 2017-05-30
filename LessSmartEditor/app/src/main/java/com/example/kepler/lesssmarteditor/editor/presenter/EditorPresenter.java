@@ -17,6 +17,8 @@ public interface EditorPresenter {
     void onMapAddSelected(Item item);
 
     void onClickedLoadButton();
+    void onClickedDeleteButton(int id);
+
     void onClickedTitle(int id);
     void onClickedSaveButton(int id, String title, List<BaseComponent> list, boolean isNew);
 }

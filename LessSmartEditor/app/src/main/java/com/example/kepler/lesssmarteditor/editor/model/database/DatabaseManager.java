@@ -29,10 +29,10 @@ public class DatabaseManager {
         String content = mJsonHelper.List2Json(list);
 
         String query;
-        if(isNew){
+        if (isNew) {
             query = "INSERT INTO row VALUES(null, '" + title + "', '" + content + "');";
-        } else{
-            query = "UPDATE row SET _title = '"+title+"', _content = '"+content+"' WHERE _id = "+id+";";
+        } else {
+            query = "UPDATE row SET _title = '" + title + "', _content = '" + content + "' WHERE _id = " + id + ";";
         }
         mDb.execSQL(query);
     }
@@ -65,5 +65,10 @@ public class DatabaseManager {
             title = "";
         ContentWithTitle cwt = new ContentWithTitle(title, list);
         return cwt;
+    }
+
+    public void deleteFromDatabase(int id) {
+        String query = "DELETE FROM row WHERE _id =" + id + ";";
+        mDb.execSQL(query);
     }
 }

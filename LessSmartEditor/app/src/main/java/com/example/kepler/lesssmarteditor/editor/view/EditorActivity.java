@@ -220,6 +220,14 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
             case R.id.action_new:
                 initRecyclerView();
                 break;
+            case R.id.action_delete:
+                boolean isNew = adapter.getIsNew();
+                if(!isNew){
+                    mPresenter.onClickedDeleteButton(adapter.getId());
+                }
+                initRecyclerView();
+                Toast.makeText(this,"삭제되었습니다",Toast.LENGTH_SHORT).show();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

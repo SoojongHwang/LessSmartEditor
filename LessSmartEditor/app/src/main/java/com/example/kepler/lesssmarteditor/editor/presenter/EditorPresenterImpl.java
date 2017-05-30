@@ -56,6 +56,11 @@ public class EditorPresenterImpl implements EditorPresenter{
     }
 
     @Override
+    public void onClickedDeleteButton(int id) {
+        mDatabaseManager.deleteFromDatabase(id);
+    }
+
+    @Override
     public void onClickedTitle(int titleId) {
         ContentWithTitle cwt = mDatabaseManager.getComponentList(titleId);
         mEditorView.showComponents(titleId, cwt.list);
