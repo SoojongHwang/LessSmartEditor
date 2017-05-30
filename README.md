@@ -114,4 +114,4 @@
 
 * BUG_06 해결 - ItemTouchHelper를 detach 한 후에 다시 set 해주어야함 (listener 2개가 달려서 이상동작)
 
-  ​
+DB 이미 존재하면 update, 없으면 새로 추가(select exists query로 가능할듯)

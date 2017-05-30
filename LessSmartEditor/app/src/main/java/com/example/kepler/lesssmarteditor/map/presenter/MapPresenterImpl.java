@@ -19,19 +19,19 @@ public class MapPresenterImpl implements MapPresenter {
     }
 
     @Override
-    public void requestSite(String str) {
+    public void onClickedSearchButton(String str) {
         mMapView.showProgressDialog();
         mMapService = new MapService(this);
         mMapService.callSearchAPI(str);
     }
 
     @Override
-    public void onSiteClicked(Item item) {
+    public void onClickedSite(Item item) {
         mMapView.makeToast(item.toString());
     }
 
     @Override
-    public void onSiteAddClicked(Item item) {
+    public void onClickedSiteAddButton(Item item) {
         mMapView.addMap(item);
     }
 

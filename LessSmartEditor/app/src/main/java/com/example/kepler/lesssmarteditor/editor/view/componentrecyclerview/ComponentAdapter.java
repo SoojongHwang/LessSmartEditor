@@ -29,14 +29,15 @@ import java.util.List;
 public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
         implements ItemTouchHelperCallback.ItemTouchHelperListener {
     private List<BaseComponent> cList;
+    private int memoId;
 
     public ComponentAdapter() {
         cList = new ArrayList<>();
     }
 
-    public ComponentAdapter(List<BaseComponent> list) {
-        cList = new ArrayList<>();
-        cList.addAll(list);
+    public ComponentAdapter(int id, List<BaseComponent> list) {
+        this.cList = list;
+        this.memoId = id;
     }
 
     @Override
@@ -101,7 +102,7 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
     public void onItemRemove(int position) {
         if (!cList.isEmpty())
             cList.remove(position);
-        notifyDataSetChanged();
+        notifyItemRemoved(position);
     }
 
     public void addComponent(BaseComponent component) {
@@ -111,7 +112,9 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
     public List<BaseComponent> getList() {
         return cList;
     }
-
+    public int getId() {
+        return memoId;
+    }
 
     public class EditTextChangeListener implements TextWatcher {
         private int position;

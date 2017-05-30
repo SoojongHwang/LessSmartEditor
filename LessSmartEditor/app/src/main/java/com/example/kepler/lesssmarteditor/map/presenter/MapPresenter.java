@@ -10,11 +10,11 @@ import java.util.List;
 
 public interface MapPresenter {
     //from View/Activity
-    void requestSite(String str);
+    void onClickedSearchButton(String str);
 
     //from View/Adapter
-    void onSiteClicked(Item item);
-    void onSiteAddClicked(Item item);
+    void onClickedSite(Item item);
+    void onClickedSiteAddButton(Item item);
 
     //from Model/MapService
     void notifyAPIResult(List<Item> list);

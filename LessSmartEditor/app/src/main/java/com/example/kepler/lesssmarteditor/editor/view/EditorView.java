@@ -20,6 +20,6 @@ public interface EditorView {
     void setTitle(String title);
     void dismissSlidingPage();
 
-    void showComponents(List<BaseComponent> cList);
+    void showComponents(int id, List<BaseComponent> cList);
     void showTitles(List<TitleWithId> tList);
 }

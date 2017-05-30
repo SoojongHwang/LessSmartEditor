@@ -56,7 +56,7 @@ public class MapActivity extends NMapActivity implements MapView {
 
     @OnClick(R.id.btn_search)
     public void onClickedSearch(View v) {
-        mPresenter.requestSite(et_address.getText().toString());
+        mPresenter.onClickedSearchButton(et_address.getText().toString());
         hideKeyBoard();
     }
 

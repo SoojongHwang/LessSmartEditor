@@ -65,13 +65,13 @@ public class SiteAdapter extends RecyclerView.Adapter<SiteAdapter.SiteViewHolder
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mPresenter.onSiteClicked(mList.get(getAdapterPosition()));
+                    mPresenter.onClickedSite(mList.get(getAdapterPosition()));
                 }
             });
             btn_add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mPresenter.onSiteAddClicked(mList.get(getAdapterPosition()));
+                    mPresenter.onClickedSiteAddButton(mList.get(getAdapterPosition()));
                 }
             });
         }

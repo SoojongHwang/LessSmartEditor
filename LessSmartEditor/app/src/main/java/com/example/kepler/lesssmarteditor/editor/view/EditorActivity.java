@@ -62,9 +62,8 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     private ComponentAdapter adapter;
     private EditorPresenter mPresenter;
     private LinearLayoutManager llm;
-    ItemTouchHelper itemTouchHelper;
+    private ItemTouchHelper itemTouchHelper;
 
-    final String[] str = {"글", "그림", "지도"};
     static final int REQ_CODE_IMAGE = 0;
     static final int REQ_CODE_MAP = 100;
 
@@ -151,8 +150,8 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     }
 
     @Override
-    public void showComponents(List<BaseComponent> cList) {
-        adapter = new ComponentAdapter(cList);
+    public void showComponents(int id, List<BaseComponent> cList) {
+        adapter = new ComponentAdapter(id, cList);
         eView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         itemTouchHelper.attachToRecyclerView(null);
@@ -188,9 +187,10 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         if(title.length()==0){
             title = "제목없는 글";
         }
+        int id = adapter.getId();
         List<BaseComponent> list = adapter.getList();
-        mPresenter.onClickedSaveButton(title, list);
-        Toast.makeText(this, "저장되었습니다.", Toast.LENGTH_SHORT).show();
+        mPresenter.onClickedSaveButton(id, title, list);
+        Toast.makeText(this, id+ "번 글이 저장되었습니다.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -222,9 +222,9 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         adapter.notifyItemInserted(adapter.getItemCount() - 1);
         eView.scrollToPosition(adapter.getItemCount() - 1);
     }
-
     private Dialog makeSelectDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        String[] str = {"글", "그림", "지도"};
         builder
                 .setTitle("컴포넌트 추가")
                 .setNegativeButton("취소", null)

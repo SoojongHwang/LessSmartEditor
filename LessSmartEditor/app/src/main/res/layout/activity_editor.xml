@@ -33,6 +33,7 @@
                 android:layout_weight="0.8"
                 android:gravity="left"
                 android:hint="(제목없음)"
+                android:background="@null"
                 android:maxLength="20" />
         </LinearLayout>
 

@@ -58,14 +58,14 @@ public class EditorPresenterImpl implements EditorPresenter{
     @Override
     public void onClickedTitle(int titleId) {
         ContentWithTitle cwt = mDatabaseManager.getComponentList(titleId);
-        mEditorView.showComponents(cwt.list);
+        mEditorView.showComponents(titleId, cwt.list);
         mEditorView.setTitle(cwt.title);
         mEditorView.dismissSlidingPage();
     }
 
     @Override
-    public void onClickedSaveButton(String title, List<BaseComponent> list) {
-        mDatabaseManager.saveToDatabase(title, list);
+    public void onClickedSaveButton(int id, String title, List<BaseComponent> list) {
+        mDatabaseManager.saveToDatabase(id, title, list);
     }
 
 }
