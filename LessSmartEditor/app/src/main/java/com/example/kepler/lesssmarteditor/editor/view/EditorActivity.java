@@ -14,6 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -36,6 +38,7 @@ import com.example.kepler.lesssmarteditor.editor.presenter.EditorPresenter;
 import com.example.kepler.lesssmarteditor.editor.presenter.EditorPresenterImpl;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.ComponentAdapter;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.ItemTouchHelperCallback;
+import com.example.kepler.lesssmarteditor.editor.view.titleRecycler.ItemDivider;
 import com.example.kepler.lesssmarteditor.editor.view.titleRecycler.TitleAdapter;
 import com.example.kepler.lesssmarteditor.map.model.Item;
 import com.example.kepler.lesssmarteditor.map.view.MapActivity;
@@ -62,7 +65,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     private ComponentAdapter adapter;
     private EditorPresenter mPresenter;
     private LinearLayoutManager llm;
-    private ItemTouchHelper itemTouchHelper;
+    private ItemTouchHelper itemTouchHelper ;
 
     static final int REQ_CODE_IMAGE = 0;
     static final int REQ_CODE_MAP = 100;
@@ -99,12 +102,13 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         adapter = new ComponentAdapter();
         eView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+        if(itemTouchHelper != null) {
+            itemTouchHelper.attachToRecyclerView(null);
+        }
         itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(adapter));
-        itemTouchHelper.attachToRecyclerView(null);
         itemTouchHelper.attachToRecyclerView(eView);
         llm = new LinearLayoutManager(this);
         eView.setLayoutManager(llm);
-        notifyToAdapter();
     }
 
     private void initSlidingPage() {
@@ -151,6 +155,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         titleAdapter = new TitleAdapter(mPresenter, list);
         title_view.setLayoutManager(new LinearLayoutManager(this));
         title_view.setAdapter(titleAdapter);
+        title_view.addItemDecoration(new ItemDivider(this));
     }
 
     @Override
@@ -195,7 +200,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         boolean isNew = adapter.getIsNew();
         int id = adapter.getId();
         mPresenter.onClickedSaveButton(id, title, list, isNew);
-        Toast.makeText(this, title+" 글이 저장되었습니다.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, title + " 글이 저장되었습니다.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -222,11 +227,12 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                 break;
             case R.id.action_delete:
                 boolean isNew = adapter.getIsNew();
-                if(!isNew){
+                if (!isNew) {
                     mPresenter.onClickedDeleteButton(adapter.getId());
+                    mPresenter.onClickedLoadButton();
+                    Toast.makeText(this, "삭제되었습니다", Toast.LENGTH_SHORT).show();
                 }
                 initRecyclerView();
-                Toast.makeText(this,"삭제되었습니다",Toast.LENGTH_SHORT).show();
                 break;
         }
         return super.onOptionsItemSelected(item);

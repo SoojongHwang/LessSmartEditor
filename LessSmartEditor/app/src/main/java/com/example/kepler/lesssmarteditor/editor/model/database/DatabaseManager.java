@@ -30,15 +30,17 @@ public class DatabaseManager {
 
         String query;
         if (isNew) {
-            query = "INSERT INTO row VALUES(null, '" + title + "', '" + content + "');";
+            query = "INSERT INTO row VALUES(null, '" + title + "', '" + content + "', DATETIME('now'));";
+            Log.d("database##",query);
         } else {
-            query = "UPDATE row SET _title = '" + title + "', _content = '" + content + "' WHERE _id = " + id + ";";
+            query = "UPDATE row SET _title = '" + title + "', _content = '" + content + "', _timestamp = DATETIME('now') WHERE _id = " + id + ";";
+            Log.d("database##",query);
         }
         mDb.execSQL(query);
     }
 
     public List<TitleWithId> getTitleList() {
-        String query = "SELECT * FROM row";
+        String query = "SELECT * FROM row order by DATETIME(_timestamp) DESC";
         Cursor cursor = mDb.rawQuery(query, null);
 
         List<TitleWithId> list = new ArrayList<>();
