@@ -15,7 +15,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextWatcher;
+import android.text.method.CharacterPickerDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -70,6 +73,8 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     static final int REQ_CODE_IMAGE = 0;
     static final int REQ_CODE_MAP = 100;
 
+    private InputFilter inputFilter;
+    private InputFilter.LengthFilter lengthFilter;
 
     private TitleAdapter titleAdapter;
     private RecyclerView title_view;
@@ -94,7 +99,9 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("잠시만기다려주세요");
-        mSelectDialog = makeSelectDialog();
+        makeSelectDialog();
+        makeInputFilter();
+        et_title.setFilters(new InputFilter[]{inputFilter, lengthFilter});
     }
 
     private void initRecyclerView() {
@@ -243,7 +250,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         eView.scrollToPosition(adapter.getItemCount() - 1);
     }
 
-    private Dialog makeSelectDialog() {
+    private void makeSelectDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String[] str = {"글", "그림", "지도"};
         builder
@@ -270,9 +277,23 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                     }
                 });
 
-        return builder.create();
+        mSelectDialog = builder.create();
     }
-
+    private void makeInputFilter(){
+        inputFilter = new InputFilter() {
+            private String blockCharacterSet = "~#^|$%'&*!;";
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                for(int i=start; i<end; i++){
+                    if(source != null && blockCharacterSet.contains(source)){
+                        return "";
+                    }
+                }
+                return null;
+            }
+        };
+        lengthFilter = new InputFilter.LengthFilter(20);
+    }
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
