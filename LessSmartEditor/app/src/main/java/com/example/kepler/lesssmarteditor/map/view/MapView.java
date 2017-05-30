@@ -21,5 +21,5 @@ public interface MapView {
     void hideKeyBoard();
 
     //for NMapView
-//    void setMapCenter();
+    void setMapCenter(int x, int y);
 }

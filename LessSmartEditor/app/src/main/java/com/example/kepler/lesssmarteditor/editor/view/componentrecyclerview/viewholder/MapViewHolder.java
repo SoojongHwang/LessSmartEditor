@@ -32,6 +32,6 @@ public class MapViewHolder extends ComponentViewHolder<MapComponent>{
     public void bindView(MapComponent mapComponent) {
         tv_name.setText(mapComponent.getName());
         tv_address.setText(mapComponent.getAddress());
-        Glide.with(mContext).load(mapComponent.getUrl()).into(mImageView);
+        Glide.with(mContext).load(mapComponent.getUrl()).placeholder(R.drawable.d1).error(R.mipmap.ic_launcher).into(mImageView);
     }
 }

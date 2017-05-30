@@ -22,4 +22,5 @@ public interface EditorView {
 
     void showComponents(int id, List<BaseComponent> cList);
     void showTitles(List<TitleWithId> tList);
+    void setMemo(int id);
 }

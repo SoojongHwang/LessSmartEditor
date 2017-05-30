@@ -30,15 +30,15 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
         implements ItemTouchHelperCallback.ItemTouchHelperListener {
     private List<BaseComponent> mList;
     private int mMemoId;
-    private boolean isNew;
+    private boolean mMemoIsNew;
 
     public ComponentAdapter() {
-        this.isNew = true;
+        this.mMemoIsNew = true;
         this.mList = new ArrayList<>();
     }
 
     public ComponentAdapter(int id, List<BaseComponent> list) {
-        isNew = false;
+        this.mMemoIsNew = false;
         this.mList = list;
         this.mMemoId = id;
     }
@@ -49,7 +49,7 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
         Type type = Type.getType(viewType);
         switch (type) {
             case TEXT:
-                View text = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_text,parent, false);
+                View text = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_text, parent, false);
                 vh = new TextViewHolder(text, new EditTextChangeListener());
                 break;
             case IMAGE:
@@ -115,12 +115,23 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
     public List<BaseComponent> getList() {
         return mList;
     }
+
     public int getId() {
         return mMemoId;
     }
-    public boolean getIsNew(){
-        return isNew;
+
+    public boolean getIsNew() {
+        return mMemoIsNew;
     }
+
+    public void setmMemoId(int mMemoId) {
+        this.mMemoId = mMemoId;
+    }
+
+    public void setmMemoIsNew(boolean mMemoIsNew) {
+        this.mMemoIsNew = mMemoIsNew;
+    }
+
     public class EditTextChangeListener implements TextWatcher {
         private int position;
 

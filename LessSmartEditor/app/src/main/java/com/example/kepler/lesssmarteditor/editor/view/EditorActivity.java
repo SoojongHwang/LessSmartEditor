@@ -14,11 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
-import android.text.TextWatcher;
-import android.text.method.CharacterPickerDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -64,11 +61,12 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
 
     private Dialog mSelectDialog;
     private ProgressDialog mProgressDialog;
+    private AlertDialog mNewAlertDialog, mDeleteAlertDialog;
 
     private ComponentAdapter adapter;
     private EditorPresenter mPresenter;
     private LinearLayoutManager llm;
-    private ItemTouchHelper itemTouchHelper ;
+    private ItemTouchHelper itemTouchHelper;
 
     static final int REQ_CODE_IMAGE = 0;
     static final int REQ_CODE_MAP = 100;
@@ -97,10 +95,8 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         initRecyclerView();
         initSlidingPage();
 
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage("잠시만기다려주세요");
-        makeSelectDialog();
-        makeInputFilter();
+        makeSelectDialogs();
+        makeInputFilters();
         et_title.setFilters(new InputFilter[]{inputFilter, lengthFilter});
     }
 
@@ -109,7 +105,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         adapter = new ComponentAdapter();
         eView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-        if(itemTouchHelper != null) {
+        if (itemTouchHelper != null) {
             itemTouchHelper.attachToRecyclerView(null);
         }
         itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(adapter));
@@ -163,6 +159,12 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         title_view.setLayoutManager(new LinearLayoutManager(this));
         title_view.setAdapter(titleAdapter);
         title_view.addItemDecoration(new ItemDivider(this));
+    }
+
+    @Override
+    public void setMemo(int id) {
+        adapter.setmMemoId(id);
+        adapter.setmMemoIsNew(false);
     }
 
     @Override
@@ -230,16 +232,10 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                 }
                 break;
             case R.id.action_new:
-                initRecyclerView();
+                mNewAlertDialog.show();
                 break;
             case R.id.action_delete:
-                boolean isNew = adapter.getIsNew();
-                if (!isNew) {
-                    mPresenter.onClickedDeleteButton(adapter.getId());
-                    mPresenter.onClickedLoadButton();
-                    Toast.makeText(this, "삭제되었습니다", Toast.LENGTH_SHORT).show();
-                }
-                initRecyclerView();
+                mDeleteAlertDialog.show();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -250,7 +246,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         eView.scrollToPosition(adapter.getItemCount() - 1);
     }
 
-    private void makeSelectDialog() {
+    private void makeSelectDialogs() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String[] str = {"글", "그림", "지도"};
         builder
@@ -278,14 +274,50 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                 });
 
         mSelectDialog = builder.create();
+
+        builder = new AlertDialog.Builder(this);
+        builder
+                .setTitle("새로 작성하기")
+                .setMessage("마지막 저장 이후의 내용들이 사라집니다.")
+                .setNegativeButton("취소", null)
+                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        initRecyclerView();
+                    }
+                });
+        mNewAlertDialog = builder.create();
+
+        builder = new AlertDialog.Builder(this);
+        builder
+                .setTitle("메모 삭제")
+                .setMessage("이 메모를 영구적으로 지웁니다.")
+                .setNegativeButton("취소", null)
+                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        boolean isNew = adapter.getIsNew();
+                        if (!isNew) {
+                            mPresenter.onClickedDeleteButton(adapter.getId());
+                            mPresenter.onClickedLoadButton();
+                        }
+                        initRecyclerView();
+                    }
+                });
+        mDeleteAlertDialog = builder.create();
+
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("잠시만기다려주세요");
     }
-    private void makeInputFilter(){
+
+    private void makeInputFilters() {
         inputFilter = new InputFilter() {
             private String blockCharacterSet = "~#^|$%'&*!;";
+
             @Override
             public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                for(int i=start; i<end; i++){
-                    if(source != null && blockCharacterSet.contains(source)){
+                for (int i = start; i < end; i++) {
+                    if (source != null && blockCharacterSet.contains(source)) {
                         return "";
                     }
                 }
@@ -294,6 +326,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         };
         lengthFilter = new InputFilter.LengthFilter(20);
     }
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {

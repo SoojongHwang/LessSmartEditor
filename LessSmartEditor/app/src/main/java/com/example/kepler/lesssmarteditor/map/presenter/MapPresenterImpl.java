@@ -28,6 +28,7 @@ public class MapPresenterImpl implements MapPresenter {
     @Override
     public void onClickedSite(Item item) {
         mMapView.makeToast(item.toString());
+        mMapView.setMapCenter((int)item.mapx, (int)item.mapy);
     }
 
     @Override

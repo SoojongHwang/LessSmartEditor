@@ -26,6 +26,7 @@ public class ImageViewHolder extends ComponentViewHolder<ImageComponent> {
 
     @Override
     public void bindView(ImageComponent imageComponent) {
-        Glide.with(mContext).load(imageComponent.getImageUrl()).into(mImageView);
+        Glide.with(mContext).load(imageComponent.getImageUrl()).error(R.mipmap.ic_launcher)
+                .into(mImageView);
     }
 }

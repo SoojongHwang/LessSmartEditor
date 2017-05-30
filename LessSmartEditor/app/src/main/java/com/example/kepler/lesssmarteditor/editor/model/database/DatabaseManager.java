@@ -25,7 +25,7 @@ public class DatabaseManager {
         mJsonHelper = new JsonHelper();
     }
 
-    public void saveToDatabase(int id, String title, List<BaseComponent> list, boolean isNew) {
+    public int saveToDatabase(int id, String title, List<BaseComponent> list, boolean isNew) {
         String content = mJsonHelper.List2Json(list);
 
         String query;
@@ -37,6 +37,12 @@ public class DatabaseManager {
             Log.d("database##",query);
         }
         mDb.execSQL(query);
+
+        Cursor cursor = mDb.rawQuery("SELECT _id FROM row",null);
+        cursor.moveToLast();
+        int lastNum = cursor.getInt(0);
+        Log.d("database", "inserted at "+lastNum);
+        return lastNum;
     }
 
     public List<TitleWithId> getTitleList() {

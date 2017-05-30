@@ -3,6 +3,7 @@ package com.example.kepler.lesssmarteditor.map.view;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -93,6 +94,12 @@ public class MapActivity extends NMapActivity implements MapView {
     @Override
     public void hideKeyBoard() {
         imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(),0);
+    }
+
+    @Override
+    public void setMapCenter(int x, int y) {
+        Point p = new Point(x,y);
+        mMapView.mapPointToScreen(p);
     }
 
     private void initActivity(){
