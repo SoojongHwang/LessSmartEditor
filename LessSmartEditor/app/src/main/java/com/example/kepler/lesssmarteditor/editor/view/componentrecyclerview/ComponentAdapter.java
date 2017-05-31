@@ -66,21 +66,13 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
 
     @Override
     public void onBindViewHolder(ComponentViewHolder holder, int position) {
-        if (holder instanceof TextViewHolder) {
-            ((TextViewHolder) holder).mListener.updatePosition(holder.getAdapterPosition());
-            ((TextViewHolder) holder).bindView((TextComponent) mList.get(position));
-        } else if (holder instanceof ImageViewHolder) {
-            ((ImageViewHolder) holder).bindView((ImageComponent) mList.get(position));
-        } else {
-            ((MapViewHolder) holder).bindView((MapComponent) mList.get(position));
-        }
+        holder.bindView(mList.get(position));
     }
 
     @Override
     public int getItemViewType(int position) {
         return mList.get(position).getType().getValue();
     }
-
 
     @Override
     public int getItemCount() {

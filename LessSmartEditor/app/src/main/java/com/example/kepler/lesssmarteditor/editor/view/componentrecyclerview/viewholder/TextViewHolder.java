@@ -26,6 +26,7 @@ public class TextViewHolder extends ComponentViewHolder<TextComponent> {
 
     @Override
     public void bindView(TextComponent textComponent) {
+        mListener.updatePosition(getAdapterPosition());
         mEditText.setText(textComponent.getContents());
     }
 }
