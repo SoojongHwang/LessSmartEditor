@@ -1,7 +1,5 @@
 package com.example.kepler.lesssmarteditor.editor.presenter;
 
-import android.net.Uri;
-
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.BaseComponent;
 import com.example.kepler.lesssmarteditor.map.model.Item;
 

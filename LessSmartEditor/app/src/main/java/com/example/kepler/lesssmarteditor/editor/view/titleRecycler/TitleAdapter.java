@@ -20,8 +20,8 @@ import butterknife.ButterKnife;
  */
 
 public class TitleAdapter extends RecyclerView.Adapter<TitleAdapter.TitleViewHolder> {
-    EditorPresenter mPresenter;
-    List<TitleWithId> list;
+    private EditorPresenter mPresenter;
+    private List<TitleWithId> list;
 
     public TitleAdapter(EditorPresenter presenter, List<TitleWithId> list) {
         this.mPresenter = presenter;

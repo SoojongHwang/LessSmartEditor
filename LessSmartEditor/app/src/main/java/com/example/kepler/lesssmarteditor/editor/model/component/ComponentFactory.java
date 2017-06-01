@@ -1,7 +1,5 @@
 package com.example.kepler.lesssmarteditor.editor.model.component;
 
-import android.net.Uri;
-
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.ImageComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.MapComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.TextComponent;
@@ -12,7 +10,7 @@ import com.example.kepler.lesssmarteditor.map.model.Item;
  * Created by Kepler on 2017-05-25.
  */
 
-public class ComponentManager {
+public class ComponentFactory {
     private String baseUrl = "https://openapi.naver.com/v1/map/staticmap.bin?clientId=hOBAjjmz9dUkwoGrp6pS&url=http://naver.com&crs=NHN:128&level=11&w=600&h=400&&baselayer=default&level=11&";
 
     public TextComponent getTextInstance() {

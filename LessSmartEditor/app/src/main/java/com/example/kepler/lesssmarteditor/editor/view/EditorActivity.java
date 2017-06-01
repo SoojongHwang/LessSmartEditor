@@ -14,8 +14,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -59,6 +61,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     @BindView(R.id.editor_et_title)
     EditText et_title;
 
+    private Menu mMenu;
     private Dialog mSelectDialog;
     private ProgressDialog mProgressDialog;
     private AlertDialog mNewAlertDialog, mDeleteAlertDialog;
@@ -98,13 +101,36 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         makeSelectDialogs();
         makeInputFilters();
         et_title.setFilters(new InputFilter[]{inputFilter, lengthFilter});
+        et_title.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.length()>0){
+                    btn_save.setEnabled(true);
+                    mMenu.findItem(R.id.action_new).setEnabled(true);
+                    mMenu.findItem(R.id.action_delete).setEnabled(true);
+                }else{
+                    btn_save.setEnabled(false);
+                    mMenu.findItem(R.id.action_new).setEnabled(false);
+                    mMenu.findItem(R.id.action_delete).setEnabled(false);
+                }
+            }
+        });
     }
 
     private void initRecyclerView() {
         et_title.setText("");
         adapter = new ComponentAdapter();
         eView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
         if (itemTouchHelper != null) {
             itemTouchHelper.attachToRecyclerView(null);
         }
@@ -124,20 +150,8 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     }
 
     @Override
-    public void addSingleTextToAdapter(TextComponent textComponent) {
-        adapter.addComponent(textComponent);
-        notifyToAdapter();
-    }
-
-    @Override
-    public void addSingleImageToAdapter(ImageComponent imageComponent) {
-        adapter.addComponent(imageComponent);
-        notifyToAdapter();
-    }
-
-    @Override
-    public void addSingleMapToAdapter(MapComponent mapComponent) {
-        adapter.addComponent(mapComponent);
+    public void addComponentToAdapter(BaseComponent baseComponent) {
+        adapter.addComponent(baseComponent);
         notifyToAdapter();
     }
 
@@ -214,6 +228,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.mMenu = menu;
         getMenuInflater().inflate(R.menu.editor_menu, menu);
         return true;
     }
@@ -284,6 +299,10 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         initRecyclerView();
+//                        adapter = new ComponentAdapter();
+//                        eView.setAdapter(adapter);
+//                        itemTouchHelper.attachToRecyclerView(null);
+//                        itemTouchHelper.attachToRecyclerView(eView);
                     }
                 });
         mNewAlertDialog = builder.create();
@@ -342,6 +361,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
             }
         }
         return super.dispatchTouchEvent(event);
+        //
     }
 
     private class SlidingPageAnimationListener implements Animation.AnimationListener {
@@ -353,7 +373,6 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                 isPageOpen = true;
             }
         }
-
         public void onAnimationRepeat(Animation animation) {
         }
 

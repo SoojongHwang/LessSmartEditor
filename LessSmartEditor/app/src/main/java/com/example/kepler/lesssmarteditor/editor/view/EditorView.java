@@ -13,9 +13,7 @@ import java.util.List;
  */
 
 public interface EditorView {
-    void addSingleTextToAdapter(TextComponent textComponent);
-    void addSingleImageToAdapter(ImageComponent imageComponent);
-    void addSingleMapToAdapter(MapComponent mapComponent);
+    void addComponentToAdapter(BaseComponent baseComponent);
 
     void setTitle(String title);
     void dismissSlidingPage();

@@ -110,8 +110,18 @@
 
 > Usecase 별 Test 필요. (요구사항별로 flow 를 따라가며 체크리스트 해보자)
 
+
+
 ## 05.30
 
 * BUG_06 해결 - ItemTouchHelper를 detach 한 후에 다시 set 해주어야함 (listener 2개가 달려서 이상동작)
 
 DB 이미 존재하면 update, 없으면 새로 추가(select exists query로 가능할듯)
+
+
+
+## 05.31
+
+* 제목이 공백일 때는 저장버튼 비활성화되도록 수정
+* ComponentAdapter 의 onBindViewHolder 메소드 간소화(abstract method)
+* ​

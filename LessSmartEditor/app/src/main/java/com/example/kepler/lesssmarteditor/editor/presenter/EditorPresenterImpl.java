@@ -1,9 +1,8 @@
 package com.example.kepler.lesssmarteditor.editor.presenter;
 
 import android.content.Context;
-import android.net.Uri;
 
-import com.example.kepler.lesssmarteditor.editor.model.component.ComponentManager;
+import com.example.kepler.lesssmarteditor.editor.model.component.ComponentFactory;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.BaseComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.ImageComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.MapComponent;
@@ -22,31 +21,31 @@ import java.util.List;
 
 public class EditorPresenterImpl implements EditorPresenter{
     private EditorView mEditorView;
-    private ComponentManager mComponentManager;
+    private ComponentFactory mComponentFactory;
     private DatabaseManager mDatabaseManager;
 
     public EditorPresenterImpl(EditorView eView) {
         this.mEditorView = eView;
-        this.mComponentManager = new ComponentManager();
+        this.mComponentFactory = new ComponentFactory();
         this.mDatabaseManager = new DatabaseManager((Context)eView);
     }
 
     @Override
     public void onTextAddSelected() {
-        TextComponent tc = mComponentManager.getTextInstance();
-        mEditorView.addSingleTextToAdapter(tc);
+        TextComponent tc = mComponentFactory.getTextInstance();
+        mEditorView.addComponentToAdapter(tc);
     }
 
     @Override
     public void onImageAddSelected(String path) {
-        ImageComponent ic= mComponentManager.getImageInstance(path);
-        mEditorView.addSingleImageToAdapter(ic);
+        ImageComponent ic= mComponentFactory.getImageInstance(path);
+        mEditorView.addComponentToAdapter(ic);
     }
 
     @Override
     public void onMapAddSelected(Item item) {
-        MapComponent mc = mComponentManager.getMapInstance(item);
-        mEditorView.addSingleMapToAdapter(mc);
+        MapComponent mc = mComponentFactory.getMapInstance(item);
+        mEditorView.addComponentToAdapter(mc);
     }
 
     @Override

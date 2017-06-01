@@ -21,8 +21,8 @@ import butterknife.ButterKnife;
  */
 
 public class SiteAdapter extends RecyclerView.Adapter<SiteAdapter.SiteViewHolder> {
-    MapPresenter mPresenter;
-    List<Item> mList;
+    private MapPresenter mPresenter;
+    private List<Item> mList;
 
     public SiteAdapter(MapPresenter presenter, List<Item> list) {
         this.mPresenter = presenter;
