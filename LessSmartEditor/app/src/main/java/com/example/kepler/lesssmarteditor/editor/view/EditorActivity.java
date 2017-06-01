@@ -14,10 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -32,10 +30,7 @@ import android.widget.Toast;
 
 import com.example.kepler.lesssmarteditor.R;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.BaseComponent;
-import com.example.kepler.lesssmarteditor.editor.model.component.domain.ImageComponent;
-import com.example.kepler.lesssmarteditor.editor.model.component.domain.MapComponent;
-import com.example.kepler.lesssmarteditor.editor.model.component.domain.TextComponent;
-import com.example.kepler.lesssmarteditor.editor.model.database.TitleWithId;
+import com.example.kepler.lesssmarteditor.editor.model.database.Title;
 import com.example.kepler.lesssmarteditor.editor.presenter.EditorPresenter;
 import com.example.kepler.lesssmarteditor.editor.presenter.EditorPresenterImpl;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.ComponentAdapter;
@@ -58,10 +53,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     Button btn_addComponent;
     @BindView(R.id.btn_save)
     Button btn_save;
-    @BindView(R.id.editor_et_title)
-    EditText et_title;
 
-    private Menu mMenu;
     private Dialog mSelectDialog;
     private ProgressDialog mProgressDialog;
     private AlertDialog mNewAlertDialog, mDeleteAlertDialog;
@@ -78,8 +70,11 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     private InputFilter.LengthFilter lengthFilter;
 
     private TitleAdapter titleAdapter;
-    private RecyclerView title_view;
+    @BindView(R.id.editor_title_recyclerView)
+    RecyclerView title_view;
+    @BindView(R.id.editor_open)
     LinearLayout page;
+
     Animation translateLeftAnim;
     Animation translateRightAnim;
     boolean isPageOpen = false;
@@ -100,35 +95,9 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
 
         makeSelectDialogs();
         makeInputFilters();
-        et_title.setFilters(new InputFilter[]{inputFilter, lengthFilter});
-        et_title.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(s.length()>0){
-                    btn_save.setEnabled(true);
-                    mMenu.findItem(R.id.action_new).setEnabled(true);
-                    mMenu.findItem(R.id.action_delete).setEnabled(true);
-                }else{
-                    btn_save.setEnabled(false);
-                    mMenu.findItem(R.id.action_new).setEnabled(false);
-                    mMenu.findItem(R.id.action_delete).setEnabled(false);
-                }
-            }
-        });
     }
 
     private void initRecyclerView() {
-        et_title.setText("");
         adapter = new ComponentAdapter();
         eView.setAdapter(adapter);
         if (itemTouchHelper != null) {
@@ -141,7 +110,6 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     }
 
     private void initSlidingPage() {
-        page = (LinearLayout) findViewById(R.id.editor_open);
         translateLeftAnim = AnimationUtils.loadAnimation(this, R.anim.translate_left);
         translateRightAnim = AnimationUtils.loadAnimation(this, R.anim.translate_right);
         SlidingPageAnimationListener animListener = new SlidingPageAnimationListener();
@@ -155,20 +123,9 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         notifyToAdapter();
     }
 
-    @Override
-    public void setTitle(String title) {
-        et_title.setText(title);
-    }
 
     @Override
-    public void dismissSlidingPage() {
-        page.startAnimation(translateRightAnim);
-    }
-
-
-    @Override
-    public void showTitles(List<TitleWithId> list) {
-        title_view = (RecyclerView) findViewById(R.id.editor_title_recyclerView);
+    public void showTitles(List<Title> list) {
         titleAdapter = new TitleAdapter(mPresenter, list);
         title_view.setLayoutManager(new LinearLayoutManager(this));
         title_view.setAdapter(titleAdapter);
@@ -176,20 +133,16 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     }
 
     @Override
-    public void setMemo(int id) {
-        adapter.setmMemoId(id);
-        adapter.setmMemoIsNew(false);
-    }
-
-    @Override
-    public void showComponents(int id, List<BaseComponent> cList) {
-        adapter = new ComponentAdapter(id, cList);
+    public void showDocument(List<BaseComponent> document) {
+        adapter = new ComponentAdapter(document);
         eView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         itemTouchHelper.attachToRecyclerView(null);
         itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(adapter));
         itemTouchHelper.attachToRecyclerView(eView);
         notifyToAdapter();
+
+        page.startAnimation(translateRightAnim);
     }
 
     @Override
@@ -197,40 +150,33 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         if (requestCode == REQ_CODE_IMAGE) {
             if (resultCode == Activity.RESULT_OK) {
                 String path = data.getData().toString();
-                mPresenter.onImageAddSelected(path);
+                mPresenter.addImage(path);
             }
         }
         if (requestCode == REQ_CODE_MAP) {
             if (resultCode == Activity.RESULT_OK) {
                 Item item = data.getParcelableExtra("data");
-                mPresenter.onMapAddSelected(item);
+                mPresenter.addMap(item);
             }
         }
     }
 
     @OnClick(R.id.btn_add_component)
-    public void onClickedAddComponent(View v) {
+    public void onClickedAddComponent() {
         mSelectDialog.show();
     }
 
     @OnClick(R.id.btn_save)
-    public void onClickedSave(View v) {
-        String title = et_title.getText().toString();
-        if (title.length() == 0) {
-            title = "제목없는 글";
-        }
+    public void onClickedSave() {
         List<BaseComponent> list = adapter.getList();
-        boolean isNew = adapter.getIsNew();
-        int id = adapter.getId();
-        mPresenter.onClickedSaveButton(id, title, list, isNew);
-        Toast.makeText(this, title + " 글이 저장되었습니다.", Toast.LENGTH_SHORT).show();
+        mPresenter.saveDocumentsToDatabase(list);
+        Toast.makeText(this, " 글이 저장되었습니다.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        this.mMenu = menu;
         getMenuInflater().inflate(R.menu.editor_menu, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -241,7 +187,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                 if (isPageOpen) {
                     page.startAnimation(translateRightAnim);
                 } else {
-                    mPresenter.onClickedLoadButton();
+                    mPresenter.getTitles();
                     page.setVisibility(View.VISIBLE);
                     page.startAnimation(translateLeftAnim);
                 }
@@ -272,7 +218,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
-                                mPresenter.onTextAddSelected();
+                                mPresenter.addText();
                                 break;
                             case 1:
                                 Intent imageIntent = new Intent(Intent.ACTION_PICK);
@@ -299,10 +245,6 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         initRecyclerView();
-//                        adapter = new ComponentAdapter();
-//                        eView.setAdapter(adapter);
-//                        itemTouchHelper.attachToRecyclerView(null);
-//                        itemTouchHelper.attachToRecyclerView(eView);
                     }
                 });
         mNewAlertDialog = builder.create();
@@ -315,11 +257,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                 .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        boolean isNew = adapter.getIsNew();
-                        if (!isNew) {
-                            mPresenter.onClickedDeleteButton(adapter.getId());
-                            mPresenter.onClickedLoadButton();
-                        }
+                        mPresenter.deleteDocumentsFromDatabase(0);
                         initRecyclerView();
                     }
                 });

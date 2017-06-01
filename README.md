@@ -124,4 +124,21 @@ DB 이미 존재하면 update, 없으면 새로 추가(select exists query로 �
 
 * 제목이 공백일 때는 저장버튼 비활성화되도록 수정
 * ComponentAdapter 의 onBindViewHolder 메소드 간소화(abstract method)
-* ​
+
+
+
+## 06.01
+
+* MVP convention, 역할에 맞는 method name으로 변경
+* 설계 변경으로 인한 기능 일시 중지
+  * 데이터베이스 삭제
+  * 제목 저장
+* Presenter가 참조하던 DataManager, ComponentManager  Model 들을 하나로 추상화
+
+## 06.02
+
+오늘 할 일
+
+* Layout 변경하여 선택한 컴포넌트별로 footer 보여주기
+* 통합 Model 에서 현재 Document의 상태정보 저장(ex. New, Updated ...)
+

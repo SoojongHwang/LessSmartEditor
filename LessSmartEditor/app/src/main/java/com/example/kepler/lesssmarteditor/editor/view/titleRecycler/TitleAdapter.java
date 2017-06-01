@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.kepler.lesssmarteditor.R;
-import com.example.kepler.lesssmarteditor.editor.model.database.TitleWithId;
+import com.example.kepler.lesssmarteditor.editor.model.database.Title;
 import com.example.kepler.lesssmarteditor.editor.presenter.EditorPresenter;
 
 import java.util.List;
@@ -21,9 +21,9 @@ import butterknife.ButterKnife;
 
 public class TitleAdapter extends RecyclerView.Adapter<TitleAdapter.TitleViewHolder> {
     private EditorPresenter mPresenter;
-    private List<TitleWithId> list;
+    private List<Title> list;
 
-    public TitleAdapter(EditorPresenter presenter, List<TitleWithId> list) {
+    public TitleAdapter(EditorPresenter presenter, List<Title> list) {
         this.mPresenter = presenter;
         this.list = list;
     }
@@ -57,7 +57,7 @@ public class TitleAdapter extends RecyclerView.Adapter<TitleAdapter.TitleViewHol
                 @Override
                 public void onClick(View v) {
                     int id = list.get(getAdapterPosition()).id;
-                    mPresenter.onClickedTitle(id);
+                    mPresenter.getDocument(id);
                 }
             });
         }

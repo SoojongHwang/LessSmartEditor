@@ -1,6 +1,7 @@
 package com.example.kepler.lesssmarteditor.editor.presenter;
 
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.BaseComponent;
+import com.example.kepler.lesssmarteditor.editor.model.component.domain.Type;
 import com.example.kepler.lesssmarteditor.map.model.Item;
 
 import java.util.List;
@@ -10,13 +11,13 @@ import java.util.List;
  */
 
 public interface EditorPresenter {
-    void onTextAddSelected();
-    void onImageAddSelected(String path);
-    void onMapAddSelected(Item item);
+    void addText();
+    void addImage(String path);
+    void addMap(Item item);
 
-    void onClickedLoadButton();
-    void onClickedDeleteButton(int id);
+    void getTitles();
+    void getDocument(int id);
 
-    void onClickedTitle(int id);
-    void onClickedSaveButton(int id, String title, List<BaseComponent> list, boolean isNew);
+    void saveDocumentsToDatabase(List<BaseComponent> list);
+    void deleteDocumentsFromDatabase(int id);
 }

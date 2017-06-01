@@ -7,9 +7,8 @@ import com.example.kepler.lesssmarteditor.editor.model.component.domain.BaseComp
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.ImageComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.MapComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.TextComponent;
-import com.example.kepler.lesssmarteditor.editor.model.database.ContentWithTitle;
 import com.example.kepler.lesssmarteditor.editor.model.database.DatabaseManager;
-import com.example.kepler.lesssmarteditor.editor.model.database.TitleWithId;
+import com.example.kepler.lesssmarteditor.editor.model.database.Title;
 import com.example.kepler.lesssmarteditor.editor.view.EditorView;
 import com.example.kepler.lesssmarteditor.map.model.Item;
 
@@ -31,46 +30,44 @@ public class EditorPresenterImpl implements EditorPresenter{
     }
 
     @Override
-    public void onTextAddSelected() {
+    public void addText() {
         TextComponent tc = mComponentFactory.getTextInstance();
         mEditorView.addComponentToAdapter(tc);
     }
 
     @Override
-    public void onImageAddSelected(String path) {
+    public void addImage(String path) {
         ImageComponent ic= mComponentFactory.getImageInstance(path);
         mEditorView.addComponentToAdapter(ic);
     }
 
     @Override
-    public void onMapAddSelected(Item item) {
+    public void addMap(Item item) {
         MapComponent mc = mComponentFactory.getMapInstance(item);
         mEditorView.addComponentToAdapter(mc);
     }
 
     @Override
-    public void onClickedLoadButton() {
-        List<TitleWithId> list = mDatabaseManager.getTitleList();
+    public void getTitles() {
+        List<Title> list = mDatabaseManager.getTitleList();
         mEditorView.showTitles(list);
     }
 
     @Override
-    public void onClickedDeleteButton(int id) {
+    public void getDocument(int titleId) {
+        List<BaseComponent> document = mDatabaseManager.getDocumentFromDatabase(titleId);
+        mEditorView.showDocument(document);
+    }
+    @Override
+    public void saveDocumentsToDatabase(List<BaseComponent> list) {
+        mDatabaseManager.saveToDatabase(list);
+    }
+
+    @Override
+    public void deleteDocumentsFromDatabase(int id) {
         mDatabaseManager.deleteFromDatabase(id);
     }
 
-    @Override
-    public void onClickedTitle(int titleId) {
-        ContentWithTitle cwt = mDatabaseManager.getComponentList(titleId);
-        mEditorView.showComponents(titleId, cwt.list);
-        mEditorView.setTitle(cwt.title);
-        mEditorView.dismissSlidingPage();
-    }
 
-    @Override
-    public void onClickedSaveButton(int id, String title, List<BaseComponent> list, boolean isNew) {
-        int position = mDatabaseManager.saveToDatabase(id, title, list, isNew);
-        mEditorView.setMemo(position);
-    }
 
 }

@@ -8,11 +8,11 @@ import java.util.List;
  * Created by Kepler on 2017-05-29.
  */
 
-public class ContentWithTitle {
+public class Document {
     public String title;
     public List<BaseComponent> list;
 
-    public ContentWithTitle(String title, List<BaseComponent> list) {
+    public Document(String title, List<BaseComponent> list) {
         this.title = title;
         this.list = list;
     }

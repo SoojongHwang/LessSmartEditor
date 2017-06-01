@@ -11,7 +11,9 @@ public enum Type {
     @SerializedName("1")
     IMAGE(1),
     @SerializedName("2")
-    MAP(2);
+    MAP(2),
+    @SerializedName("3")
+    TITLE(3);
 
     private final int typeValue;
 

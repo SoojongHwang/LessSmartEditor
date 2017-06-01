@@ -12,10 +12,12 @@ import com.example.kepler.lesssmarteditor.editor.model.component.domain.BaseComp
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.ImageComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.MapComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.TextComponent;
+import com.example.kepler.lesssmarteditor.editor.model.component.domain.TitleComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.Type;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.viewholder.ImageViewHolder;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.viewholder.MapViewHolder;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.viewholder.TextViewHolder;
+import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.viewholder.TitleViewHolder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,18 +31,14 @@ import java.util.List;
 public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
         implements ItemTouchHelperCallback.ItemTouchHelperListener {
     private List<BaseComponent> mList;
-    private int mMemoId;
-    private boolean mMemoIsNew;
 
     public ComponentAdapter() {
-        this.mMemoIsNew = true;
         this.mList = new ArrayList<>();
+        mList.add(new TitleComponent(Type.TITLE, ""));
     }
 
-    public ComponentAdapter(int id, List<BaseComponent> list) {
-        this.mMemoIsNew = false;
+    public ComponentAdapter(List<BaseComponent> list) {
         this.mList = list;
-        this.mMemoId = id;
     }
 
     @Override
@@ -60,6 +58,9 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
                 View map = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_map, parent, false);
                 vh = new MapViewHolder(map);
                 break;
+            case TITLE:
+                View title = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_ctitle, parent, false);
+                vh = new TitleViewHolder(title);
         }
         return vh;
     }
@@ -106,22 +107,6 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
 
     public List<BaseComponent> getList() {
         return mList;
-    }
-
-    public int getId() {
-        return mMemoId;
-    }
-
-    public boolean getIsNew() {
-        return mMemoIsNew;
-    }
-
-    public void setmMemoId(int mMemoId) {
-        this.mMemoId = mMemoId;
-    }
-
-    public void setmMemoIsNew(boolean mMemoIsNew) {
-        this.mMemoIsNew = mMemoIsNew;
     }
 
     public class EditTextChangeListener implements TextWatcher {
