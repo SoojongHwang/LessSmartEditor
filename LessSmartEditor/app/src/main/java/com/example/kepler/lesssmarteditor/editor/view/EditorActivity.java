@@ -34,7 +34,7 @@ import com.example.kepler.lesssmarteditor.editor.model.database.Title;
 import com.example.kepler.lesssmarteditor.editor.presenter.EditorPresenter;
 import com.example.kepler.lesssmarteditor.editor.presenter.EditorPresenterImpl;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.ComponentAdapter;
-import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.ItemTouchHelperCallback;
+import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.listener.ItemTouchHelperCallback;
 import com.example.kepler.lesssmarteditor.editor.view.titleRecycler.ItemDivider;
 import com.example.kepler.lesssmarteditor.editor.view.titleRecycler.TitleAdapter;
 import com.example.kepler.lesssmarteditor.map.model.Item;
@@ -140,7 +140,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         itemTouchHelper.attachToRecyclerView(null);
         itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(adapter));
         itemTouchHelper.attachToRecyclerView(eView);
-        notifyToAdapter();
+//        notifyToAdapter();
 
         page.startAnimation(translateRightAnim);
     }

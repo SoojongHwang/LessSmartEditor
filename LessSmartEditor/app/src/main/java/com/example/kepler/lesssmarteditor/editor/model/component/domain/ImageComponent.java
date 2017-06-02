@@ -1,7 +1,5 @@
 package com.example.kepler.lesssmarteditor.editor.model.component.domain;
 
-import android.net.Uri;
-
 /**
  * Created by Kepler on 2017-05-20.
  */

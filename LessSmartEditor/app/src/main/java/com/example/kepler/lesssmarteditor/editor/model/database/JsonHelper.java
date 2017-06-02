@@ -4,6 +4,7 @@ import com.example.kepler.lesssmarteditor.editor.model.component.domain.BaseComp
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.ImageComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.MapComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.TextComponent;
+import com.example.kepler.lesssmarteditor.editor.model.component.domain.TitleComponent;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -66,6 +67,8 @@ public class JsonHelper{
                         return context.deserialize(obj, ImageComponent.class);
                     case 2:
                         return context.deserialize(obj, MapComponent.class);
+                    case 3:
+                        return context.deserialize(obj, TitleComponent.class);
                     default:
                         return null;
                 }

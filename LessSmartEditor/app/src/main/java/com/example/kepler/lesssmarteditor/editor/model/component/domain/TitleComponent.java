@@ -6,6 +6,7 @@ package com.example.kepler.lesssmarteditor.editor.model.component.domain;
 
 public class TitleComponent extends BaseComponent {
     private String title;
+    private String imageUri;
 
     public TitleComponent(Type type, String title) {
         super(type);
@@ -13,5 +14,13 @@ public class TitleComponent extends BaseComponent {
     }
     public String getTitle() {
         return title;
+    }
+
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
     }
 }

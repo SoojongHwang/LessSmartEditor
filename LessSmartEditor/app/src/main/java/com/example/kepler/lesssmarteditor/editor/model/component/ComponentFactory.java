@@ -22,8 +22,8 @@ public class ComponentFactory {
     }
 
     public MapComponent getMapInstance(Item item) {
-        String title = getRefinedTitle(item.title);
         String url = getUrl(item.mapx, item.mapy);
+        String title = getRefinedTitle(item.title);
         return new MapComponent(Type.MAP, title, item.roadAddress, url);
     }
 

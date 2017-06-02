@@ -3,25 +3,24 @@ package com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.kepler.lesssmarteditor.R;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.BaseComponent;
-import com.example.kepler.lesssmarteditor.editor.model.component.domain.ImageComponent;
-import com.example.kepler.lesssmarteditor.editor.model.component.domain.MapComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.TextComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.TitleComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.Type;
+import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.listener.ItemTouchHelperCallback;
+import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.listener.ItemTouchHelperListener;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.viewholder.ImageViewHolder;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.viewholder.MapViewHolder;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.viewholder.TextViewHolder;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.viewholder.TitleViewHolder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,7 +28,7 @@ import java.util.List;
  */
 
 public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
-        implements ItemTouchHelperCallback.ItemTouchHelperListener {
+        implements ItemTouchHelperListener {
     private List<BaseComponent> mList;
 
     public ComponentAdapter() {
@@ -60,7 +59,7 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
                 break;
             case TITLE:
                 View title = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_ctitle, parent, false);
-                vh = new TitleViewHolder(title);
+                vh = new TitleViewHolder(title, new EditTextChangeListener());
         }
         return vh;
     }
@@ -85,7 +84,6 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
         if (before < 0 || before >= mList.size() || after < 0 || after >= mList.size()) {
             return false;
         }
-
         BaseComponent target = mList.get(before);
         mList.remove(before);
         mList.add(after, target);

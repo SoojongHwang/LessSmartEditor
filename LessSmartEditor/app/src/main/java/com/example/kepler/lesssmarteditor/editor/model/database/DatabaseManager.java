@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.BaseComponent;
+import com.example.kepler.lesssmarteditor.editor.model.component.domain.TitleComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +27,11 @@ public class DatabaseManager {
     }
 
     public int saveToDatabase(List<BaseComponent> list) {
+        String title = ((TitleComponent)(list.get(0))).getTitle();
         String content = mJsonHelper.List2Json(list);
 
         String query;
-            query = "INSERT INTO row VALUES(null, '" + "hi1" + "', '" + content + "', DATETIME('now'));";
+            query = "INSERT INTO row VALUES(null, '" + title + "', '" + content + "', DATETIME('now'));";
 //            query = "UPDATE row SET _title = '" + "hi2" + "', _content = '" + content + "', _timestamp = DATETIME('now') WHERE _id = " + id + ";";
         mDb.execSQL(query);
 

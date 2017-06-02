@@ -142,3 +142,7 @@ DB 이미 존재하면 update, 없으면 새로 추가(select exists query로 �
 * Layout 변경하여 선택한 컴포넌트별로 footer 보여주기
 * 통합 Model 에서 현재 Document의 상태정보 저장(ex. New, Updated ...)
 
+
+
+
+* Title Component 추가 (RecyclerView 에서 하나의 Document 로 보여줌)
