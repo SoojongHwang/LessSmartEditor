@@ -57,7 +57,7 @@ public class TitleAdapter extends RecyclerView.Adapter<TitleAdapter.TitleViewHol
                 @Override
                 public void onClick(View v) {
                     int id = list.get(getAdapterPosition()).id;
-                    mPresenter.getDocument(id);
+                    mPresenter.loadDocument(id);
                 }
             });
         }

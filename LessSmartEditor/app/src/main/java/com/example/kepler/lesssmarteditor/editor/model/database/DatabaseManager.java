@@ -3,8 +3,8 @@ package com.example.kepler.lesssmarteditor.editor.model.database;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
+import com.example.kepler.lesssmarteditor.editor.model.EditorModel;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.BaseComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.TitleComponent;
 
@@ -17,29 +17,35 @@ import java.util.List;
 
 public class DatabaseManager {
     private SQLiteDatabase mDb;
-    private JsonHelper mJsonHelper;
     private DBHelper mDbHelper;
+    private EditorModel mEditorModel;
 
-    public DatabaseManager(Context context) {
+    public DatabaseManager(Context context, EditorModel model) {
         mDbHelper = new DBHelper(context);
         mDb = mDbHelper.getWritableDatabase();
-        mJsonHelper = new JsonHelper();
+        this.mEditorModel = model;
     }
 
-    public int saveToDatabase(List<BaseComponent> list) {
-        String title = ((TitleComponent)(list.get(0))).getTitle();
-        String content = mJsonHelper.List2Json(list);
+    public void saveDocument(int docId, List<BaseComponent> list){
+        String title = ((TitleComponent) (list.get(0))).getTitle();
+        String content = JsonHelper.List2Json(list);
+
+        if(title.length() ==0 ){
+            title = "(제목 없는 글)";
+        }
 
         String query;
+        if(docId == -1){
             query = "INSERT INTO row VALUES(null, '" + title + "', '" + content + "', DATETIME('now'));";
-//            query = "UPDATE row SET _title = '" + "hi2" + "', _content = '" + content + "', _timestamp = DATETIME('now') WHERE _id = " + id + ";";
+        }
+        else{
+            query = "UPDATE row SET _title = '" + title + "', _content = '" + content + "', _timestamp = DATETIME('now') WHERE _id = " + docId + ";";
+        }
         mDb.execSQL(query);
 
-        Cursor cursor = mDb.rawQuery("SELECT _id FROM row",null);
-        cursor.moveToLast();
-        int lastNum = cursor.getInt(0);
-        Log.d("database", "inserted at "+lastNum);
-        return lastNum;
+        if(docId==-1) {
+            mEditorModel.setDocumentId(getLastDocumentId());
+        }
     }
 
     public List<Title> getTitleList() {
@@ -59,11 +65,10 @@ public class DatabaseManager {
     public List<BaseComponent> getDocumentFromDatabase(int id) {
         String query = "SELECT * FROM row where _id = " + id + ";";
         Cursor cursor = mDb.rawQuery(query, null);
-
         cursor.moveToFirst();
 
         String content = cursor.getString(2);
-        List<BaseComponent> list = mJsonHelper.Json2List(content);
+        List<BaseComponent> list = JsonHelper.Json2List(content);
 
         return list;
     }
@@ -71,5 +76,11 @@ public class DatabaseManager {
     public void deleteFromDatabase(int id) {
         String query = "DELETE FROM row WHERE _id =" + id + ";";
         mDb.execSQL(query);
+    }
+
+    private int getLastDocumentId() {
+        Cursor cursor = mDb.rawQuery("SELECT _id FROM row", null);
+        cursor.moveToLast();
+        return cursor.getInt(0);
     }
 }

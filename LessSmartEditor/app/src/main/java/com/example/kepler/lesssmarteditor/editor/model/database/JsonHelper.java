@@ -24,19 +24,15 @@ import java.util.List;
  */
 
 public class JsonHelper{
-    Gson gson;
+    public static final Gson gson = new GsonBuilder()
+            .registerTypeAdapter(BaseComponent.class, new ItemDeserializer())
+            .create();
 
-    public JsonHelper() {
-        gson = new GsonBuilder()
-                .registerTypeAdapter(BaseComponent.class, new ItemDeserializer())
-                .create();
-    }
-
-    public String List2Json(List<BaseComponent> list){
+    public static String List2Json(List<BaseComponent> list){
         return gson.toJson(list);
     }
 
-    public List<BaseComponent> Json2List(String json){
+    public static List<BaseComponent> Json2List(String json){
         JsonElement element = new JsonParser().parse(json);
         JsonArray arr = element.getAsJsonArray();
 

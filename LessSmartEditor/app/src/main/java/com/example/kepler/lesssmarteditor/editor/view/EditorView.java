@@ -10,6 +10,10 @@ import java.util.List;
  */
 
 public interface EditorView {
+    void showToast(String str);
+    void enableSelectMenu();
+    void disableSelectMenu();
+
     void addComponentToAdapter(BaseComponent baseComponent);
 
     void showDocument(List<BaseComponent> document);

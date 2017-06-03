@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputFilter;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -77,8 +78,9 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
 
     Animation translateLeftAnim;
     Animation translateRightAnim;
-    boolean isPageOpen = false;
 
+    boolean isPageOpen = false;
+    private Menu mMenu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,7 +100,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     }
 
     private void initRecyclerView() {
-        adapter = new ComponentAdapter();
+        adapter = new ComponentAdapter(mPresenter);
         eView.setAdapter(adapter);
         if (itemTouchHelper != null) {
             itemTouchHelper.attachToRecyclerView(null);
@@ -118,6 +120,23 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     }
 
     @Override
+    public void showToast(String str) {
+        Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void enableSelectMenu() {
+        mMenu.findItem(R.id.action_delete).setEnabled(true);
+        mMenu.findItem(R.id.action_new).setEnabled(true);
+    }
+
+    @Override
+    public void disableSelectMenu() {
+        mMenu.findItem(R.id.action_delete).setEnabled(false);
+        mMenu.findItem(R.id.action_new).setEnabled(false);
+    }
+
+    @Override
     public void addComponentToAdapter(BaseComponent baseComponent) {
         adapter.addComponent(baseComponent);
         notifyToAdapter();
@@ -134,7 +153,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
 
     @Override
     public void showDocument(List<BaseComponent> document) {
-        adapter = new ComponentAdapter(document);
+        adapter = new ComponentAdapter(mPresenter, document);
         eView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         itemTouchHelper.attachToRecyclerView(null);
@@ -170,11 +189,11 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     public void onClickedSave() {
         List<BaseComponent> list = adapter.getList();
         mPresenter.saveDocumentsToDatabase(list);
-        Toast.makeText(this, " 글이 저장되었습니다.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.mMenu = menu;
         getMenuInflater().inflate(R.menu.editor_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -187,7 +206,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                 if (isPageOpen) {
                     page.startAnimation(translateRightAnim);
                 } else {
-                    mPresenter.getTitles();
+                    mPresenter.loadTitles();
                     page.setVisibility(View.VISIBLE);
                     page.startAnimation(translateLeftAnim);
                 }
@@ -245,6 +264,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         initRecyclerView();
+                        mPresenter.notifyNewDocument();
                     }
                 });
         mNewAlertDialog = builder.create();
@@ -257,7 +277,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                 .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mPresenter.deleteDocumentsFromDatabase(0);
+                        mPresenter.deleteDocumentFromDatabase(0);
                         initRecyclerView();
                     }
                 });
@@ -299,7 +319,11 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
             }
         }
         return super.dispatchTouchEvent(event);
-        //
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
     }
 
     private class SlidingPageAnimationListener implements Animation.AnimationListener {

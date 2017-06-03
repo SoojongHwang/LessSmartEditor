@@ -20,6 +20,10 @@ public class TitleComponent extends BaseComponent {
         return imageUri;
     }
 
+    public void setTitle(String str){
+        this.title = str;
+    }
+
     public void setImageUri(String imageUri) {
         this.imageUri = imageUri;
     }

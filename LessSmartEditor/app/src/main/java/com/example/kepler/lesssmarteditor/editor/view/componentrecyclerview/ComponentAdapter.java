@@ -13,6 +13,7 @@ import com.example.kepler.lesssmarteditor.editor.model.component.domain.BaseComp
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.TextComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.TitleComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.Type;
+import com.example.kepler.lesssmarteditor.editor.presenter.EditorPresenter;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.listener.ItemTouchHelperCallback;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.listener.ItemTouchHelperListener;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.viewholder.ImageViewHolder;
@@ -29,14 +30,17 @@ import java.util.List;
 
 public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
         implements ItemTouchHelperListener {
+    private EditorPresenter mPresenter;
     private List<BaseComponent> mList;
 
-    public ComponentAdapter() {
+    public ComponentAdapter(EditorPresenter presenter) {
+        this.mPresenter = presenter;
         this.mList = new ArrayList<>();
         mList.add(new TitleComponent(Type.TITLE, ""));
     }
 
-    public ComponentAdapter(List<BaseComponent> list) {
+    public ComponentAdapter(EditorPresenter presenter, List<BaseComponent> list) {
+        this.mPresenter = presenter;
         this.mList = list;
     }
 
@@ -89,6 +93,7 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
         mList.add(after, target);
 
         notifyItemMoved(before, after);
+        mPresenter.notifyDocumentChanged();
         return true;
     }
 
@@ -97,6 +102,7 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
         if (!mList.isEmpty())
             mList.remove(position);
         notifyItemRemoved(position);
+        mPresenter.notifyDocumentChanged();
     }
 
     public void addComponent(BaseComponent component) {
@@ -122,10 +128,16 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             if (mList.get(position) instanceof TextComponent)
                 ((TextComponent) mList.get(position)).setContents(s.toString());
+            else if (mList.get(position) instanceof TitleComponent){
+                ((TitleComponent) mList.get(position)).setTitle(s.toString());
+            }
         }
 
         @Override
         public void afterTextChanged(Editable s) {
+            if(s.length()>0) {
+                mPresenter.notifyDocumentChanged();
+            }
         }
     }
 }

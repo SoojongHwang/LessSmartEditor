@@ -11,29 +11,29 @@ import com.example.kepler.lesssmarteditor.map.model.Item;
  */
 
 public class ComponentFactory {
-    private String baseUrl = "https://openapi.naver.com/v1/map/staticmap.bin?clientId=hOBAjjmz9dUkwoGrp6pS&url=http://naver.com&crs=NHN:128&level=11&w=600&h=400&&baselayer=default&level=11&";
+    private static String baseUrl = "https://openapi.naver.com/v1/map/staticmap.bin?clientId=hOBAjjmz9dUkwoGrp6pS&url=http://naver.com&crs=NHN:128&level=11&w=600&h=400&&baselayer=default&level=11&";
 
-    public TextComponent getTextInstance() {
+    public static TextComponent getTextInstance() {
         return new TextComponent(Type.TEXT, "");
     }
 
-    public ImageComponent getImageInstance(String path) {
+    public static ImageComponent getImageInstance(String path) {
         return new ImageComponent(Type.IMAGE, path);
     }
 
-    public MapComponent getMapInstance(Item item) {
+    public static MapComponent getMapInstance(Item item) {
         String url = getUrl(item.mapx, item.mapy);
         String title = getRefinedTitle(item.title);
         return new MapComponent(Type.MAP, title, item.roadAddress, url);
     }
 
-    private String getUrl(float x, float y) {
+    private static String getUrl(float x, float y) {
         StringBuilder builder = new StringBuilder(baseUrl);
         builder.append("&center=" + (int) x + "," + (int) y)
                 .append("&markers=" + (int) x + "," + (int) y);
         return builder.toString();
     }
-    private String getRefinedTitle(String str) {
+    private static String getRefinedTitle(String str) {
         str = str.replace("<b>", " ");
         return str.replace("</b>", " ");
     }

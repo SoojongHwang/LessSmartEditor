@@ -11,13 +11,20 @@ import java.util.List;
  */
 
 public interface EditorPresenter {
+    void notifyToView(String str);
+    void enableMenu();
+    void disableMenu();
+
     void addText();
     void addImage(String path);
     void addMap(Item item);
 
-    void getTitles();
-    void getDocument(int id);
+    void loadTitles();
+    void loadDocument(int id);
 
     void saveDocumentsToDatabase(List<BaseComponent> list);
-    void deleteDocumentsFromDatabase(int id);
+    void deleteDocumentFromDatabase(int id);
+
+    void notifyDocumentChanged();
+    void notifyNewDocument();
 }
