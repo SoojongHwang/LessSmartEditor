@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.example.kepler.lesssmarteditor.R;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.BaseComponent;
+import com.example.kepler.lesssmarteditor.editor.model.component.domain.Type;
 import com.example.kepler.lesssmarteditor.editor.model.database.Title;
 import com.example.kepler.lesssmarteditor.editor.presenter.EditorPresenter;
 import com.example.kepler.lesssmarteditor.editor.presenter.EditorPresenterImpl;
@@ -75,12 +76,19 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     RecyclerView title_view;
     @BindView(R.id.editor_open)
     LinearLayout page;
+    @BindView(R.id.generalMode)
+    LinearLayout generalMode;
+    @BindView(R.id.spanMode)
+    LinearLayout spanMode;
 
     Animation translateLeftAnim;
     Animation translateRightAnim;
 
     boolean isPageOpen = false;
     private Menu mMenu;
+
+    InputMethodManager imm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,7 +102,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         mPresenter = new EditorPresenterImpl(this);
         initRecyclerView();
         initSlidingPage();
-
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         makeSelectDialogs();
         makeInputFilters();
     }
@@ -102,6 +110,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     private void initRecyclerView() {
         adapter = new ComponentAdapter(mPresenter);
         eView.setAdapter(adapter);
+        eView.addOnItemTouchListener(new MyRecyclerViewTouchListener());
         if (itemTouchHelper != null) {
             itemTouchHelper.attachToRecyclerView(null);
         }
@@ -140,6 +149,10 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     public void addComponentToAdapter(BaseComponent baseComponent) {
         adapter.addComponent(baseComponent);
         notifyToAdapter();
+        if(baseComponent.getType() == Type.TEXT){
+            View v = getCurrentFocus();
+            imm.showSoftInput(v,0);
+        }
     }
 
 
@@ -159,8 +172,6 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         itemTouchHelper.attachToRecyclerView(null);
         itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(adapter));
         itemTouchHelper.attachToRecyclerView(eView);
-//        notifyToAdapter();
-
         page.startAnimation(translateRightAnim);
     }
 
@@ -304,28 +315,6 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         lengthFilter = new InputFilter.LengthFilter(20);
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            View v = getCurrentFocus();
-            if (v instanceof EditText) {
-                Rect outRect = new Rect();
-                v.getGlobalVisibleRect(outRect);
-                if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                    v.clearFocus();
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                }
-            }
-        }
-        return super.dispatchTouchEvent(event);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return super.onTouchEvent(event);
-    }
-
     private class SlidingPageAnimationListener implements Animation.AnimationListener {
         public void onAnimationEnd(Animation animation) {
             if (isPageOpen) {
@@ -335,10 +324,58 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                 isPageOpen = true;
             }
         }
+
         public void onAnimationRepeat(Animation animation) {
         }
 
         public void onAnimationStart(Animation animation) {
+        }
+    }
+
+    public class MyRecyclerViewTouchListener implements RecyclerView.OnItemTouchListener {
+
+        @Override
+        public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+            if (e.getAction() == MotionEvent.ACTION_DOWN) {
+                View v = rv.findChildViewUnder(e.getX(), e.getY());
+                if (v != null) {
+                    int position = rv.getChildAdapterPosition(v);
+                    int itemType = rv.getAdapter().getItemViewType(position);
+                    Type type = Type.getType(itemType);
+                    switch (type){
+                        case TEXT:
+                        case TITLE:
+                            generalMode.setVisibility(View.GONE);
+                            spanMode.setVisibility(View.VISIBLE);
+                            break;
+                        case IMAGE:
+                        case MAP:
+                            generalMode.setVisibility(View.VISIBLE);
+                            spanMode.setVisibility(View.GONE);
+                            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                            break;
+                    }
+                    Log.d("haha", "얘는... " + type);
+                }else{
+                    generalMode.setVisibility(View.VISIBLE);
+                    spanMode.setVisibility(View.GONE);
+                    View currentView = getCurrentFocus();
+                    imm.hideSoftInputFromWindow(currentView.getWindowToken(), 0);
+                    Log.d("haha", "얘는... null인가바...");
+                }
+            }
+
+            return false;
+        }
+
+        @Override
+        public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+            Log.d("haha","머야머야! onTouch에도 오나방!!");
+        }
+
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
         }
     }
 }

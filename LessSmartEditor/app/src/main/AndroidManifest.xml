@@ -19,7 +19,7 @@
         >
         <activity
             android:name="com.example.kepler.lesssmarteditor.editor.view.EditorActivity"
-            android:windowSoftInputMode="adjustPan"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"
             >
             <intent-filter>

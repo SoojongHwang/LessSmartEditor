@@ -22,9 +22,9 @@
 
 10. 아래그림의 디자인은 예시이며, 따라할 필요 없이 디자인은 각자 구현한다.단, 동일한 기능의 동작이 가능해야 한다.
 
-    ___
+   ___
 
-    (06.01 추가 요구사항)
+   (06.01 추가 요구사항)
 
 11. 텍스트 컴포넌트 Spannable
 
@@ -171,5 +171,12 @@ DB 이미 존재하면 update, 없으면 새로 추가(select exists query로 �
 ## 06.03
 
 * 문서상태를 Empty 와 Updated로 축소
+
 * 빈 문서는 삭제, 새글 작성, 저장이 불가능하도록 수정
+
+  ​
+
+## 06.04
+
+* RecyclerView 의 item 클릭에 따라 선택바(Span Mode, General Mode) 보여주기(RecyclerView.OnItemTouchListener)
 * ​

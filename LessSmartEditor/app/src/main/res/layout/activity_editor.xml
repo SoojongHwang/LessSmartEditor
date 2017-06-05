@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.kepler.lesssmarteditor.editor.view.EditorActivity">
 
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/footer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:weightSum="1.0"
-        tools:context="com.example.kepler.lesssmarteditor.editor.view.EditorActivity">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        >
+
         <LinearLayout
+            android:id="@+id/generalMode"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.1"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="1.0">
+            android:visibility="visible"
+            android:weightSum="1.0"
+            >
 
             <Button
                 android:id="@+id/btn_add_component"
@@ -31,16 +36,56 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.333"
                 android:text="저장" />
-
-
         </LinearLayout>
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/editor_recyclerView"
+
+        <LinearLayout
+            android:id="@+id/spanMode"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.9">
-        </android.support.v7.widget.RecyclerView>
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="gone"
+            android:weightSum="1">
+
+            <Button
+                android:id="@+id/select"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:text="노멀" />
+
+            <Button
+                android:id="@+id/bold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:text="볼드" />
+
+            <Button
+                android:id="@+id/underline"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:text="이탤릭" />
+
+            <Button
+                android:id="@+id/log"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:text="이탤릭볼드" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/editor_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="100dp"
+        android:clipToPadding="false"
+        android:layout_above="@id/footer">
+
+    </android.support.v7.widget.RecyclerView>
 
     <LinearLayout
         android:id="@+id/editor_open"
@@ -50,17 +95,19 @@
         android:background="#e0e0e0"
         android:orientation="vertical"
         android:visibility="gone"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.05"
+            android:background="#bcaaa4"
             android:gravity="center"
             android:text="글 목록"
-            android:background="#bcaaa4"
-            android:textSize="20dp"
-            />
+            android:textSize="20dp" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/editor_title_recyclerView"
@@ -71,6 +118,6 @@
         </android.support.v7.widget.RecyclerView>
 
     </LinearLayout>
-</FrameLayout>
+</RelativeLayout>
 
 

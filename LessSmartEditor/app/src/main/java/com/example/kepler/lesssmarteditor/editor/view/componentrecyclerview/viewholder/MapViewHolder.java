@@ -2,6 +2,7 @@ package com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.vie
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -17,18 +18,19 @@ import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.Comp
  * Created by Kepler on 2017-05-20.
  */
 
-public class MapViewHolder extends ComponentViewHolder<MapComponent>{
+public class MapViewHolder extends ComponentViewHolder<MapComponent> {
     private ImageView mImageView;
     private TextView tv_name;
     private TextView tv_address;
     private Context mContext;
 
+
     public MapViewHolder(View itemView) {
         super(itemView);
         mContext = itemView.getContext();
-        mImageView = (ImageView)itemView.findViewById(R.id.view_map_iv_imageView);
-        tv_name = (TextView)itemView.findViewById(R.id.view_map_tv_title);
-        tv_address = (TextView)itemView.findViewById(R.id.view_map_tv_address);
+        mImageView = (ImageView) itemView.findViewById(R.id.view_map_iv_imageView);
+        tv_name = (TextView) itemView.findViewById(R.id.view_map_tv_title);
+        tv_address = (TextView) itemView.findViewById(R.id.view_map_tv_address);
     }
 
     @Override

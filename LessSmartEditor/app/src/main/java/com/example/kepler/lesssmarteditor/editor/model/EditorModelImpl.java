@@ -36,7 +36,6 @@ public class EditorModelImpl implements EditorModel{
 
     @Override
     public TextComponent getTextComponent() {
-        setDocumentState(DocumentState.UPDATED);
         return ComponentFactory.getTextInstance();
     }
 

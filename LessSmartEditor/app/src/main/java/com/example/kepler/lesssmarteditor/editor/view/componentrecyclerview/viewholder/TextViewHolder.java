@@ -1,10 +1,12 @@
 package com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.viewholder;
 
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 
 import com.example.kepler.lesssmarteditor.R;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.TextComponent;
+import com.example.kepler.lesssmarteditor.editor.model.component.domain.Type;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.ComponentAdapter;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.ComponentViewHolder;
 
@@ -20,7 +22,7 @@ public class TextViewHolder extends ComponentViewHolder<TextComponent> {
     public TextViewHolder(View itemView, ComponentAdapter.EditTextChangeListener listener) {
         super(itemView);
         this.mListener = listener;
-        mEditText = (EditText)itemView.findViewById(R.id.view_text_editText);
+        mEditText = (EditText) itemView.findViewById(R.id.view_text_editText);
         mEditText.addTextChangedListener(mListener);
     }
 
