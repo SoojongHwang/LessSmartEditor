@@ -1,12 +1,10 @@
 package com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.viewholder;
 
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 
 import com.example.kepler.lesssmarteditor.R;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.TextComponent;
-import com.example.kepler.lesssmarteditor.editor.model.component.domain.Type;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.ComponentAdapter;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.ComponentViewHolder;
 

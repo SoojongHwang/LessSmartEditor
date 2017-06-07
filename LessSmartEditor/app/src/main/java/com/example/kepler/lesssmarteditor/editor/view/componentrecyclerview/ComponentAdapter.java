@@ -124,8 +124,9 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (mList.get(position) instanceof TextComponent)
+            if (mList.get(position) instanceof TextComponent) {
                 ((TextComponent) mList.get(position)).setContents(s.toString());
+            }
             else if (mList.get(position) instanceof TitleComponent){
                 ((TitleComponent) mList.get(position)).setTitle(s.toString());
             }
@@ -136,6 +137,7 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
             if(s.length()>0) {
                 mPresenter.notifyDocumentChanged();
             }
+
         }
     }
 }

@@ -352,7 +352,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                         case MAP:
                             generalMode.setVisibility(View.VISIBLE);
                             spanMode.setVisibility(View.GONE);
-                            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+//                            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                             break;
                     }
                     Log.d("haha", "얘는... " + type);
@@ -364,7 +364,6 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                     Log.d("haha", "얘는... null인가바...");
                 }
             }
-
             return false;
         }
 
