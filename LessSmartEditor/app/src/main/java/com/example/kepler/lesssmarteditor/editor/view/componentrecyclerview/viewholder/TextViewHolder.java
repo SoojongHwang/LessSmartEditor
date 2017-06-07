@@ -5,6 +5,7 @@ import android.widget.EditText;
 
 import com.example.kepler.lesssmarteditor.R;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.TextComponent;
+import com.example.kepler.lesssmarteditor.editor.view.MyEditText;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.ComponentAdapter;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.ComponentViewHolder;
 
@@ -14,13 +15,13 @@ import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.Comp
  */
 
 public class TextViewHolder extends ComponentViewHolder<TextComponent> {
-    private EditText mEditText;
-    public ComponentAdapter.EditTextChangeListener mListener;
+    public MyEditText mEditText;
+    private ComponentAdapter.EditTextChangeListener mListener;
 
     public TextViewHolder(View itemView, ComponentAdapter.EditTextChangeListener listener) {
         super(itemView);
         this.mListener = listener;
-        mEditText = (EditText) itemView.findViewById(R.id.view_text_editText);
+        mEditText = (MyEditText) itemView.findViewById(R.id.view_text_editText);
         mEditText.addTextChangedListener(mListener);
     }
 

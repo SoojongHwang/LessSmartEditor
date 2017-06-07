@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
@@ -15,7 +16,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputFilter;
+import android.text.Spannable;
 import android.text.Spanned;
+import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,6 +32,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.example.kepler.lesssmarteditor.R;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.BaseComponent;
@@ -37,6 +42,7 @@ import com.example.kepler.lesssmarteditor.editor.presenter.EditorPresenter;
 import com.example.kepler.lesssmarteditor.editor.presenter.EditorPresenterImpl;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.ComponentAdapter;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.listener.ItemTouchHelperCallback;
+import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.viewholder.TextViewHolder;
 import com.example.kepler.lesssmarteditor.editor.view.titleRecycler.ItemDivider;
 import com.example.kepler.lesssmarteditor.editor.view.titleRecycler.TitleAdapter;
 import com.example.kepler.lesssmarteditor.map.model.Item;
@@ -55,7 +61,16 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     Button btn_addComponent;
     @BindView(R.id.btn_save)
     Button btn_save;
-
+    //
+    @BindView(R.id.tb1)
+    ToggleButton b1_bold;
+    @BindView(R.id.tb2)
+    ToggleButton b2_italic;
+    @BindView(R.id.tb3)
+    ToggleButton b3_underline;
+    private static MyEditText et;
+    private Spannable eSpan;
+    //
     private Dialog mSelectDialog;
     private ProgressDialog mProgressDialog;
     private AlertDialog mNewAlertDialog, mDeleteAlertDialog;
@@ -88,6 +103,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     private Menu mMenu;
 
     InputMethodManager imm;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,9 +165,9 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     public void addComponentToAdapter(BaseComponent baseComponent) {
         adapter.addComponent(baseComponent);
         notifyToAdapter();
-        if(baseComponent.getType() == Type.TEXT){
+        if (baseComponent.getType() == Type.TEXT) {
             View v = getCurrentFocus();
-            imm.showSoftInput(v,0);
+            imm.showSoftInput(v, 0);
         }
     }
 
@@ -314,7 +330,110 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         };
         lengthFilter = new InputFilter.LengthFilter(20);
     }
+    @OnClick(R.id.tb1)
+    public void onClickedBold(){
+        eSpan = et.getText();
+        int s = et.getSelectionStart();
+        int e = et.getSelectionEnd();
 
+        if (b1_bold.isChecked()) {
+            if (s == e) {
+                et.getText().insert(e++, " ");
+                et.setSelection(s, e);
+            }
+            eSpan.setSpan(new StyleSpan(Typeface.BOLD), s, e, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            b1_bold.setChecked(true);
+        } else {
+            StyleSpan[] sArr = eSpan.getSpans(s, e, StyleSpan.class);
+            for (StyleSpan ss : sArr) {
+                if (ss.getStyle() == Typeface.BOLD) {
+                    int spanStart = eSpan.getSpanStart(ss);
+                    int spanEnd = eSpan.getSpanEnd(ss);
+
+                    eSpan.removeSpan(ss);
+
+                    if (s == e) {
+                        et.getText().insert(e++, " ");
+                        et.setSelection(s, e);
+                    }
+                    if (spanStart < s)
+                        eSpan.setSpan(new StyleSpan(Typeface.BOLD), spanStart, s, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+                    if (spanEnd > e)
+                        eSpan.setSpan(new StyleSpan(Typeface.BOLD), e, spanEnd, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+                }
+            }
+        }
+        et.onSelectionChanged(et.getSelectionStart(), et.getSelectionEnd());
+    }
+    @OnClick(R.id.tb2)
+    public void onClickedItalic(){
+        eSpan = et.getText();
+        int s = et.getSelectionStart();
+        int e = et.getSelectionEnd();
+
+        if (b2_italic.isChecked()) {
+            if (s == e) {
+                et.getText().insert(e++, " ");
+                et.setSelection(s, e);
+            }
+            eSpan.setSpan(new StyleSpan(Typeface.ITALIC), s, e, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            b2_italic.setChecked(true);
+        } else {
+            StyleSpan[] sArr = eSpan.getSpans(s, e, StyleSpan.class);
+            for (StyleSpan ss : sArr) {
+                if (ss.getStyle() == Typeface.ITALIC) {
+                    int spanStart = eSpan.getSpanStart(ss);
+                    int spanEnd = eSpan.getSpanEnd(ss);
+
+                    eSpan.removeSpan(ss);
+
+                    if (s == e) {
+                        et.getText().insert(e++, " ");
+                        et.setSelection(s, e);
+                    }
+                    if (spanStart < s)
+                        eSpan.setSpan(new StyleSpan(Typeface.ITALIC), spanStart, s, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+                    if (spanEnd > e)
+                        eSpan.setSpan(new StyleSpan(Typeface.ITALIC), e, spanEnd, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+                }
+            }
+        }
+        et.onSelectionChanged(et.getSelectionStart(), et.getSelectionEnd());
+    }
+    @OnClick(R.id.tb3)
+    public void onClickedUnderline(){
+        et.clearComposingText();
+        eSpan = et.getText();
+        int s = et.getSelectionStart();
+        int e = et.getSelectionEnd();
+
+        if (b3_underline.isChecked()) {
+            if (s == e) {
+                et.getText().insert(e++, " ");
+                et.setSelection(s, e);
+            }
+            eSpan.setSpan(new UnderlineSpan(), s, e, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            b3_underline.setChecked(true);
+        } else {
+            UnderlineSpan[] uArr = eSpan.getSpans(s, e, UnderlineSpan.class);
+            for (UnderlineSpan us : uArr) {
+                int spanStart = eSpan.getSpanStart(us);
+                int spanEnd = eSpan.getSpanEnd(us);
+
+                eSpan.removeSpan(us);
+
+                if (s == e) {
+                    et.getText().insert(e++, " ");
+                    et.setSelection(s, e);
+                }
+                if (spanStart < s)
+                    eSpan.setSpan(new UnderlineSpan(), spanStart, s, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+                if (spanEnd > e)
+                    eSpan.setSpan(new UnderlineSpan(), e, spanEnd, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            }
+        }
+        et.onSelectionChanged(et.getSelectionStart(), et.getSelectionEnd());
+    }
     private class SlidingPageAnimationListener implements Animation.AnimationListener {
         public void onAnimationEnd(Animation animation) {
             if (isPageOpen) {
@@ -342,21 +461,25 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                     int position = rv.getChildAdapterPosition(v);
                     int itemType = rv.getAdapter().getItemViewType(position);
                     Type type = Type.getType(itemType);
-                    switch (type){
+                    switch (type) {
                         case TEXT:
-                        case TITLE:
+//                        case TITLE:
                             generalMode.setVisibility(View.GONE);
                             spanMode.setVisibility(View.VISIBLE);
+                            TextViewHolder tvh = (TextViewHolder)rv.getChildViewHolder(v);
+                            et = tvh.mEditText;
+                            et.setOnSpanListener(new MySpanChecker());
+                            et.onSelectionChanged(0,et.length());
+
                             break;
                         case IMAGE:
                         case MAP:
                             generalMode.setVisibility(View.VISIBLE);
                             spanMode.setVisibility(View.GONE);
-//                            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                             break;
                     }
                     Log.d("haha", "얘는... " + type);
-                }else{
+                } else {
                     generalMode.setVisibility(View.VISIBLE);
                     spanMode.setVisibility(View.GONE);
                     View currentView = getCurrentFocus();
@@ -369,12 +492,25 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
 
         @Override
         public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-            Log.d("haha","머야머야! onTouch에도 오나방!!");
+            Log.d("haha", "머야머야! onTouch에도 오나방!!");
         }
 
         @Override
         public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
+        }
+    }
+
+    public class MySpanChecker implements MyEditText.MySpanListener {
+        @Override
+        public void onDetected(String bit) {
+            boolean isBold = (int) (bit.charAt(0)) - 48 == 1 ? true : false;
+            boolean isItalic = (int) (bit.charAt(1)) - 48 == 1 ? true : false;
+            boolean isUnderlined = (int) (bit.charAt(2)) - 48 == 1 ? true : false;
+
+            b1_bold.setChecked(isBold);
+            b2_italic.setChecked(isItalic);
+            b3_underline.setChecked(isUnderlined);
         }
     }
 }
