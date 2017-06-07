@@ -18,7 +18,7 @@ public class MyEditText extends EditText {
     MySpanListener mListener;
 
     public interface MySpanListener {
-        void onDetected(String bit);
+        void onSpanDetected(String bit);
     }
 
     public MyEditText(Context context) {
@@ -31,9 +31,6 @@ public class MyEditText extends EditText {
 
     public void setOnSpanListener(MySpanListener listener) {
         this.mListener = listener;
-    }
-    public void clearSpanListener(){
-        this.mListener = null;
     }
 
     @Override
@@ -54,7 +51,6 @@ public class MyEditText extends EditText {
                         bit[1] = "1";
                     }
                 }
-                Log.d("StyleSpan Info",eSpan.getSpanStart(ss)+", "+eSpan.getSpanEnd(ss)+", "+ss.getStyle());
             }
             else if (o instanceof UnderlineSpan) {
                 UnderlineSpan us = (UnderlineSpan) o;
@@ -64,10 +60,7 @@ public class MyEditText extends EditText {
                 else if (selStart != eSpan.getSpanStart(us) || selEnd>selStart) {
                     bit[2] = "1";
                 }
-
-                Log.d("UnderlineSpan Info",eSpan.getSpanStart(us)+", "+eSpan.getSpanEnd(us));
             }
-            Log.d("bit",bit[0]+""+bit[1]+""+bit[2]);
 
         }
         StringBuilder sb = new StringBuilder("");
@@ -75,7 +68,8 @@ public class MyEditText extends EditText {
             sb.append(bit[i]);
         }
         if (mListener != null)
-            mListener.onDetected(sb.toString());
+            mListener.onSpanDetected(sb.toString());
+
         super.onSelectionChanged(selStart, selEnd);
     }
 }

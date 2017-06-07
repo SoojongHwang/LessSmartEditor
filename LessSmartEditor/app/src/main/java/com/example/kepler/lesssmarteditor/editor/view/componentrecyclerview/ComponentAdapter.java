@@ -1,14 +1,21 @@
 package com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview;
 
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.Spannable;
 import android.text.TextWatcher;
+import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.kepler.lesssmarteditor.R;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.BaseComponent;
+import com.example.kepler.lesssmarteditor.editor.model.component.domain.SpanInfo;
+import com.example.kepler.lesssmarteditor.editor.model.component.domain.SpanType;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.TextComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.TitleComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.Type;
@@ -30,6 +37,7 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
         implements ItemTouchHelperListener {
     private EditorPresenter mPresenter;
     private List<BaseComponent> mList;
+    private boolean isLoadedFromDB = false;
 
     public ComponentAdapter(EditorPresenter presenter) {
         this.mPresenter = presenter;
@@ -40,6 +48,7 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
     public ComponentAdapter(EditorPresenter presenter, List<BaseComponent> list) {
         this.mPresenter = presenter;
         this.mList = list;
+        isLoadedFromDB = true;
     }
 
     @Override
@@ -134,10 +143,45 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
 
         @Override
         public void afterTextChanged(Editable s) {
-            if(s.length()>0) {
+            if (s.length() > 0) {
                 mPresenter.notifyDocumentChanged();
             }
+            if(!(mList.get(position) instanceof TextComponent))
+                return;
 
+            List<SpanInfo> spanInfoList;
+            if(isLoadedFromDB)
+                spanInfoList = ((TextComponent)mList.get(position)).getSpanInfoList();
+            else
+                spanInfoList = new ArrayList<>();
+            isLoadedFromDB = false;
+            Spannable eSpan = s;
+            int start = 0;
+            int end = s.length();
+
+            Object[] oArr = eSpan.getSpans(start, end, Object.class);
+            for (Object o : oArr) {
+                if (o instanceof StyleSpan) {
+                    StyleSpan ss = (StyleSpan) o;
+                    int spanStart = eSpan.getSpanStart(ss);
+                    int spanEnd = eSpan.getSpanEnd(ss);
+                    SpanInfo current;
+                    if (ss.getStyle() == Typeface.BOLD) {
+                        current = new SpanInfo(SpanType.BOLD, spanStart, spanEnd);
+                    } else {
+                        current = new SpanInfo(SpanType.ITALIC, spanStart, spanEnd);
+                    }
+                    spanInfoList.add(current);
+                }
+                if (o instanceof UnderlineSpan) {
+                    UnderlineSpan us = (UnderlineSpan) o;
+                    int spanStart = eSpan.getSpanStart(us);
+                    int spanEnd = eSpan.getSpanEnd(us);
+                    SpanInfo current = new SpanInfo(SpanType.UNDERLINE, spanStart, spanEnd);
+                    spanInfoList.add(current);
+                }
+            }
+            ((TextComponent) mList.get(position)).setSpanInfoList(spanInfoList);
         }
     }
 }
