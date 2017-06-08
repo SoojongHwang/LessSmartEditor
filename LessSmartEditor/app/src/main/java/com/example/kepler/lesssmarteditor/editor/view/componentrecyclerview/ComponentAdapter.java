@@ -20,6 +20,7 @@ import com.example.kepler.lesssmarteditor.editor.model.component.domain.TextComp
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.TitleComponent;
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.Type;
 import com.example.kepler.lesssmarteditor.editor.presenter.EditorPresenter;
+import com.example.kepler.lesssmarteditor.editor.view.MyEditText;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.listener.ItemTouchHelperListener;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.viewholder.ImageViewHolder;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.viewholder.MapViewHolder;
@@ -36,8 +37,8 @@ import java.util.List;
 public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
         implements ItemTouchHelperListener {
     private EditorPresenter mPresenter;
+    private MyEditText.MySpanListener mSpanListener;
     private List<BaseComponent> mList;
-    private boolean isLoadedFromDB = false;
 
     public ComponentAdapter(EditorPresenter presenter) {
         this.mPresenter = presenter;
@@ -48,7 +49,6 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
     public ComponentAdapter(EditorPresenter presenter, List<BaseComponent> list) {
         this.mPresenter = presenter;
         this.mList = list;
-        isLoadedFromDB = true;
     }
 
     @Override
@@ -58,7 +58,9 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
         switch (type) {
             case TEXT:
                 final View text = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_text, parent, false);
-                vh = new TextViewHolder(text, new EditTextChangeListener());
+                vh = new TextViewHolder(text);
+                ((TextViewHolder) vh).setEditTextChangeListener(new EditTextChangeListener());
+                ((TextViewHolder) vh).setSpanDetector(mSpanListener);
                 break;
             case IMAGE:
                 final View image = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_image, parent, false);
@@ -120,6 +122,10 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
         return mList;
     }
 
+    public void setMySpanListener(MyEditText.MySpanListener mySpanListener) {
+        this.mSpanListener = mySpanListener;
+    }
+
     public class EditTextChangeListener implements TextWatcher {
         private int position;
 
@@ -135,8 +141,7 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             if (mList.get(position) instanceof TextComponent) {
                 ((TextComponent) mList.get(position)).setContents(s.toString());
-            }
-            else if (mList.get(position) instanceof TitleComponent){
+            } else if (mList.get(position) instanceof TitleComponent) {
                 ((TitleComponent) mList.get(position)).setTitle(s.toString());
             }
         }
@@ -146,42 +151,18 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
             if (s.length() > 0) {
                 mPresenter.notifyDocumentChanged();
             }
-            if(!(mList.get(position) instanceof TextComponent))
-                return;
+        }
+    }
 
-            List<SpanInfo> spanInfoList;
-            if(isLoadedFromDB)
-                spanInfoList = ((TextComponent)mList.get(position)).getSpanInfoList();
-            else
-                spanInfoList = new ArrayList<>();
-            isLoadedFromDB = false;
-            Spannable eSpan = s;
-            int start = 0;
-            int end = s.length();
+    public class MySpanSaver implements MyEditText.MySpanSaveListener {
+        private int position;
 
-            Object[] oArr = eSpan.getSpans(start, end, Object.class);
-            for (Object o : oArr) {
-                if (o instanceof StyleSpan) {
-                    StyleSpan ss = (StyleSpan) o;
-                    int spanStart = eSpan.getSpanStart(ss);
-                    int spanEnd = eSpan.getSpanEnd(ss);
-                    SpanInfo current;
-                    if (ss.getStyle() == Typeface.BOLD) {
-                        current = new SpanInfo(SpanType.BOLD, spanStart, spanEnd);
-                    } else {
-                        current = new SpanInfo(SpanType.ITALIC, spanStart, spanEnd);
-                    }
-                    spanInfoList.add(current);
-                }
-                if (o instanceof UnderlineSpan) {
-                    UnderlineSpan us = (UnderlineSpan) o;
-                    int spanStart = eSpan.getSpanStart(us);
-                    int spanEnd = eSpan.getSpanEnd(us);
-                    SpanInfo current = new SpanInfo(SpanType.UNDERLINE, spanStart, spanEnd);
-                    spanInfoList.add(current);
-                }
-            }
-            ((TextComponent) mList.get(position)).setSpanInfoList(spanInfoList);
+        public void updatePosition(int position) {
+            this.position = position;
+        }
+        @Override
+        public void save(List<SpanInfo> spanInfoList) {
+
         }
     }
 }

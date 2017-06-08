@@ -73,7 +73,6 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     @BindView(R.id.tb3)
     ToggleButton b3_underline;
     private static MyEditText et;
-    private int targetPos;
     private Spannable eSpan;
     private MySpanChecker spanChecker;
     //
@@ -122,17 +121,17 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
 
     private void init() {
         mPresenter = new EditorPresenterImpl(this);
+        spanChecker = new MySpanChecker();
         initRecyclerView();
         initSlidingPage();
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         makeSelectDialogs();
         makeInputFilters();
-        //
-        spanChecker = new MySpanChecker();
     }
 
     private void initRecyclerView() {
         adapter = new ComponentAdapter(mPresenter);
+        adapter.setMySpanListener(spanChecker);
         eView.setAdapter(adapter);
         eView.addOnItemTouchListener(new MyRecyclerViewTouchListener());
         if (itemTouchHelper != null) {
@@ -191,6 +190,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     @Override
     public void showDocument(List<BaseComponent> document) {
         adapter = new ComponentAdapter(mPresenter, document);
+        adapter.setMySpanListener(spanChecker);
         eView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         itemTouchHelper.attachToRecyclerView(null);
@@ -371,8 +371,6 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                 }
             }
         }
-        shakeMyEditText(et);
-        et.setSelection(s,e);
         et.onSelectionChanged(et.getSelectionStart(), et.getSelectionEnd());
     }
     @OnClick(R.id.tb2)
@@ -408,8 +406,6 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                 }
             }
         }
-        shakeMyEditText(et);
-        et.setSelection(s,e);
         et.onSelectionChanged(et.getSelectionStart(), et.getSelectionEnd());
     }
     @OnClick(R.id.tb3)
@@ -444,13 +440,11 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                     eSpan.setSpan(new UnderlineSpan(), e, spanEnd, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
             }
         }
-        shakeMyEditText(et);
-        et.setSelection(s,e);
         et.onSelectionChanged(et.getSelectionStart(), et.getSelectionEnd());
     }
-    private void shakeMyEditText(MyEditText eet){
-        eet.getText().insert(eet.length()," ");
-        eet.setText(eet.getText().subSequence(0, eet.length()-1));
+    private void clearCurrentFocus(){
+        View currentView = getCurrentFocus();
+        imm.hideSoftInputFromWindow(currentView.getWindowToken(), 0);
     }
     private class SlidingPageAnimationListener implements Animation.AnimationListener {
         public void onAnimationEnd(Animation animation) {
@@ -486,11 +480,9 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                             spanMode.setVisibility(View.VISIBLE);
                             TextViewHolder tvh = (TextViewHolder)rv.getChildViewHolder(v);
                             et = tvh.mEditText;
-                            et.setOnSpanListener(spanChecker);
-                            et.onSelectionChanged(0,et.length());
-                            targetPos = position;
 
                             break;
+
                         case IMAGE:
                         case MAP:
                             generalMode.setVisibility(View.VISIBLE);
@@ -500,8 +492,8 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                 } else {
                     generalMode.setVisibility(View.VISIBLE);
                     spanMode.setVisibility(View.GONE);
-                    View currentView = getCurrentFocus();
-                    imm.hideSoftInputFromWindow(currentView.getWindowToken(), 0);
+                    clearCurrentFocus();
+                    et.clearFocus();
                 }
             }
             return false;
@@ -527,47 +519,6 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
             b1_bold.setChecked(isBold);
             b2_italic.setChecked(isItalic);
             b3_underline.setChecked(isUnderlined);
-        }
-    }
-    public class MyRecyclingListener implements RecyclerView.RecyclerListener{
-        @Override
-        public void onViewRecycled(RecyclerView.ViewHolder holder) {
-            if(Type.getType(holder.getItemViewType())==Type.TEXT){
-
-                TextViewHolder tHolder =(TextViewHolder)holder;
-                MyEditText currentEditText = tHolder.mEditText;
-                TextComponent tc = (TextComponent) adapter.getList().get(holder.getAdapterPosition());
-
-                List<SpanInfo> spanInfoList = new ArrayList<>();
-                Spannable eSpan = currentEditText.getText();
-
-                int start = 0;
-                int end = currentEditText.length();
-
-                Object[] oArr = eSpan.getSpans(start, end, Object.class);
-                for (Object o : oArr) {
-                    if (o instanceof StyleSpan) {
-                        StyleSpan ss = (StyleSpan) o;
-                        int spanStart = eSpan.getSpanStart(ss);
-                        int spanEnd = eSpan.getSpanEnd(ss);
-                        SpanInfo current;
-                        if (ss.getStyle() == Typeface.BOLD) {
-                            current = new SpanInfo(SpanType.BOLD, spanStart, spanEnd);
-                        } else {
-                            current = new SpanInfo(SpanType.ITALIC, spanStart, spanEnd);
-                        }
-                        spanInfoList.add(current);
-                    }
-                    if (o instanceof UnderlineSpan) {
-                        UnderlineSpan us = (UnderlineSpan) o;
-                        int spanStart = eSpan.getSpanStart(us);
-                        int spanEnd = eSpan.getSpanEnd(us);
-                        SpanInfo current = new SpanInfo(SpanType.UNDERLINE, spanStart, spanEnd);
-                        spanInfoList.add(current);
-                    }
-                }
-                tc.setSpanInfoList(spanInfoList);
-            }
         }
     }
 }
