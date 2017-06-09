@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -222,6 +223,8 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
 
     @OnClick(R.id.btn_save)
     public void onClickedSave() {
+        if(et != null)
+            et.clearFocus();
         List<BaseComponent> list = adapter.getList();
         mPresenter.saveDocumentsToDatabase(list);
     }
@@ -338,8 +341,9 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         };
         lengthFilter = new InputFilter.LengthFilter(20);
     }
+
     @OnClick(R.id.tb1)
-    public void onClickedBold(){
+    public void onClickedBold() {
         eSpan = et.getText();
         int s = et.getSelectionStart();
         int e = et.getSelectionEnd();
@@ -373,8 +377,9 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         }
         et.onSelectionChanged(et.getSelectionStart(), et.getSelectionEnd());
     }
+
     @OnClick(R.id.tb2)
-    public void onClickedItalic(){
+    public void onClickedItalic() {
         eSpan = et.getText();
         int s = et.getSelectionStart();
         int e = et.getSelectionEnd();
@@ -408,8 +413,9 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         }
         et.onSelectionChanged(et.getSelectionStart(), et.getSelectionEnd());
     }
+
     @OnClick(R.id.tb3)
-    public void onClickedUnderline(){
+    public void onClickedUnderline() {
         et.clearComposingText();
         eSpan = et.getText();
         int s = et.getSelectionStart();
@@ -420,11 +426,11 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                 et.getText().insert(e++, " ");
                 et.setSelection(s, e);
             }
-            eSpan.setSpan(new UnderlineSpan(), s, e, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            eSpan.setSpan(new MyUnderlineSpan(), s, e, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
             b3_underline.setChecked(true);
         } else {
-            UnderlineSpan[] uArr = eSpan.getSpans(s, e, UnderlineSpan.class);
-            for (UnderlineSpan us : uArr) {
+            MyUnderlineSpan[] uArr = eSpan.getSpans(s, e, MyUnderlineSpan.class);
+            for (MyUnderlineSpan us : uArr) {
                 int spanStart = eSpan.getSpanStart(us);
                 int spanEnd = eSpan.getSpanEnd(us);
 
@@ -435,17 +441,19 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                     et.setSelection(s, e);
                 }
                 if (spanStart < s)
-                    eSpan.setSpan(new UnderlineSpan(), spanStart, s, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+                    eSpan.setSpan(new MyUnderlineSpan(), spanStart, s, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
                 if (spanEnd > e)
-                    eSpan.setSpan(new UnderlineSpan(), e, spanEnd, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+                    eSpan.setSpan(new MyUnderlineSpan(), e, spanEnd, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
             }
         }
         et.onSelectionChanged(et.getSelectionStart(), et.getSelectionEnd());
     }
-    private void clearCurrentFocus(){
+
+    private void clearCurrentFocus() {
         View currentView = getCurrentFocus();
         imm.hideSoftInputFromWindow(currentView.getWindowToken(), 0);
     }
+
     private class SlidingPageAnimationListener implements Animation.AnimationListener {
         public void onAnimationEnd(Animation animation) {
             if (isPageOpen) {
@@ -478,9 +486,9 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
 //                        case TITLE:
                             generalMode.setVisibility(View.GONE);
                             spanMode.setVisibility(View.VISIBLE);
-                            TextViewHolder tvh = (TextViewHolder)rv.getChildViewHolder(v);
+                            TextViewHolder tvh = (TextViewHolder) rv.getChildViewHolder(v);
                             et = tvh.mEditText;
-
+                            et.setCurrentPos(position);
                             break;
 
                         case IMAGE:
@@ -493,7 +501,6 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                     generalMode.setVisibility(View.VISIBLE);
                     spanMode.setVisibility(View.GONE);
                     clearCurrentFocus();
-                    et.clearFocus();
                 }
             }
             return false;
@@ -509,16 +516,12 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         }
     }
 
-    public class MySpanChecker implements MyEditText.MySpanListener {
+    public class MySpanChecker implements MyEditText.MySpanDetectListener {
         @Override
-        public void onSpanDetected(String bit) {
-            boolean isBold = (int) (bit.charAt(0)) - 48 == 1 ? true : false;
-            boolean isItalic = (int) (bit.charAt(1)) - 48 == 1 ? true : false;
-            boolean isUnderlined = (int) (bit.charAt(2)) - 48 == 1 ? true : false;
-
-            b1_bold.setChecked(isBold);
-            b2_italic.setChecked(isItalic);
-            b3_underline.setChecked(isUnderlined);
+        public void onSpanDetected(boolean[] bit) {
+            b1_bold.setChecked(bit[0]);
+            b2_italic.setChecked(bit[1]);
+            b3_underline.setChecked(bit[2]);
         }
     }
 }

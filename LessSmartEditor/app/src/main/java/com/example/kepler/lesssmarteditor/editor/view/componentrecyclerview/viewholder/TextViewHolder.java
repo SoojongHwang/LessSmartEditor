@@ -13,6 +13,7 @@ import com.example.kepler.lesssmarteditor.editor.model.component.domain.SpanType
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.TextComponent;
 import com.example.kepler.lesssmarteditor.editor.view.EditorActivity;
 import com.example.kepler.lesssmarteditor.editor.view.MyEditText;
+import com.example.kepler.lesssmarteditor.editor.view.MyUnderlineSpan;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.ComponentAdapter;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.ComponentViewHolder;
 
@@ -26,7 +27,8 @@ import java.util.List;
 public class TextViewHolder extends ComponentViewHolder<TextComponent> {
     public MyEditText mEditText;
     private ComponentAdapter.EditTextChangeListener mListener;
-    private MyEditText.MySpanListener mSpanListener;
+    private MyEditText.MySpanDetectListener mSpanListener;
+    private MyEditText.MyEditTextFocusListener mFocusListener;
 
     public TextViewHolder(View itemView) {
         super(itemView);
@@ -37,21 +39,27 @@ public class TextViewHolder extends ComponentViewHolder<TextComponent> {
     public void bindView(final TextComponent textComponent) {
         mListener.updatePosition(getAdapterPosition());
         mEditText.setText(textComponent.getContents());
-//        applySpanList(textComponent.getSpanInfoList());
+        applySpanList(textComponent.getSpanInfoList());
     }
     public void setEditTextChangeListener(ComponentAdapter.EditTextChangeListener listener){
         this.mListener = listener;
         this.mEditText.addTextChangedListener(mListener);
     }
-    public void setSpanDetector(MyEditText.MySpanListener mySpanListener){
+    public void setSpanDetector(MyEditText.MySpanDetectListener mySpanListener){
         this.mSpanListener = mySpanListener;
         this.mEditText.setOnSpanListener(mSpanListener);
+    }
+    public void setSpanSaver(MyEditText.MyEditTextFocusListener myFocusListener){
+        this.mFocusListener = myFocusListener;
+//        this.mEditText.set
+        this.mEditText.setOnMyFocusListener(mFocusListener);
     }
     private void applySpanList(List<SpanInfo> spanList){
         Spannable eSpan = mEditText.getText();
 
         if(spanList == null)
             return;
+
         for(SpanInfo si:spanList){
             SpanType sType = si.spanType;
             int spanStart = si.start;
@@ -65,7 +73,7 @@ public class TextViewHolder extends ComponentViewHolder<TextComponent> {
                     eSpan.setSpan(new StyleSpan(Typeface.ITALIC),spanStart,spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     break;
                 case UNDERLINE:
-                    eSpan.setSpan(new UnderlineSpan(),spanStart,spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    eSpan.setSpan(new MyUnderlineSpan(),spanStart,spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     break;
             }
         }

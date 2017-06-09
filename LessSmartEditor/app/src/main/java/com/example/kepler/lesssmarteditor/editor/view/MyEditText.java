@@ -3,6 +3,7 @@ package com.example.kepler.lesssmarteditor.editor.view;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.text.Spannable;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
@@ -11,7 +12,9 @@ import android.util.Log;
 import android.widget.EditText;
 
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.SpanInfo;
+import com.example.kepler.lesssmarteditor.editor.model.component.domain.SpanType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,13 +23,16 @@ import java.util.List;
 
 @SuppressLint("AppCompatCustomView")
 public class MyEditText extends EditText {
-    MySpanListener mListener;
+    MySpanDetectListener mDetectListener;
+    MyEditTextFocusListener mFocusListener;
+    private int currentPos;
 
-    public interface MySpanListener {
-        void onSpanDetected(String bit);
+    public interface MySpanDetectListener {
+        void onSpanDetected(boolean[] bit);
     }
-    public interface MySpanSaveListener{
-        void save(List<SpanInfo> spanInfoList);
+
+    public interface MyEditTextFocusListener {
+        void save(int pos,List<SpanInfo> spanInfoList);
     }
 
     public MyEditText(Context context) {
@@ -37,22 +43,58 @@ public class MyEditText extends EditText {
         super(context, attrs);
     }
 
-    public void setOnSpanListener(MySpanListener listener) {
-        this.mListener = listener;
+    public void setOnSpanListener(MySpanDetectListener listener) {
+        this.mDetectListener = listener;
+    }
+    public void setOnMyFocusListener(MyEditTextFocusListener listener){
+        this.mFocusListener = listener;
+    }
+
+    public void setCurrentPos(int currentPos) {
+        this.currentPos = currentPos;
     }
 
     @Override
     protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
-        if(focused)
-            Log.d("SOOJONG","get focus!");
-        else
-            Log.d("SOOJONG","lost focus");
+        if (focused) {
+            Log.d("SOOJONG", "get focus!");
+        }
+        else {
+            Log.d("SOOJONG", "lost focus");
+            List<SpanInfo> spanInfoList = new ArrayList<>();
+            Spannable eSpan = this.getText();
+            Object[] oArr = eSpan.getSpans(0, eSpan.length(), Object.class);
+            for (Object o : oArr) {
+                if (o instanceof StyleSpan) {
+                    StyleSpan ss = (StyleSpan) o;
+                    int spanStart = eSpan.getSpanStart(ss);
+                    int spanEnd = eSpan.getSpanEnd(ss);
+                    SpanInfo current;
+                    if (ss.getStyle() == Typeface.BOLD) {
+                        current = new SpanInfo(SpanType.BOLD, spanStart, spanEnd);
+                    } else {
+                        current = new SpanInfo(SpanType.ITALIC, spanStart, spanEnd);
+                    }
+                    spanInfoList.add(current);
+                }
+                if (o instanceof UnderlineSpan) {
+                    UnderlineSpan us = (UnderlineSpan) o;
+                    int spanStart = eSpan.getSpanStart(us);
+                    int spanEnd = eSpan.getSpanEnd(us);
+                    SpanInfo current = new SpanInfo(SpanType.UNDERLINE, spanStart, spanEnd);
+                    spanInfoList.add(current);
+                }
+            }
+
+            mFocusListener.save(currentPos, spanInfoList);
+            Log.d("SOOJONG", spanInfoList.size()+"개의 span Saved!!");
+        }
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
     }
 
     @Override
     protected void onSelectionChanged(int selStart, int selEnd) {
-        String[] bit = {"0", "0", "0"};
+        boolean[] bit = {false, false, false};
         Spannable eSpan = this.getText();
         Object[] sArr = eSpan.getSpans(selStart, selEnd, Object.class);
 
@@ -67,33 +109,29 @@ public class MyEditText extends EditText {
                 } else if (spanStart < selEnd) {
                     int spanStyle = ss.getStyle();
                     switch (spanStyle) {
-                        case 1:
-                            bit[0] = "1";
+                        case Typeface.BOLD:
+                            bit[0] = true;
                             break;
-                        case 2:
-                            bit[1] = "1";
+                        case Typeface.ITALIC:
+                            bit[1] = true;
                             break;
                     }
                 }
-            } else if (o instanceof UnderlineSpan) {
-                UnderlineSpan us = (UnderlineSpan) o;
+            } else if (o instanceof MyUnderlineSpan) {
+                MyUnderlineSpan us = (MyUnderlineSpan) o;
                 int spanStart = eSpan.getSpanStart(us);
                 int spanEnd = eSpan.getSpanEnd(us);
 
                 if (spanStart == spanEnd) { //쓰레기 스팬정보
                     eSpan.removeSpan(us);
                 } else if (spanStart < selEnd) {
-                    bit[2] = "1";
+                    bit[2] = true;
                 }
             }
         }
-        StringBuilder sb = new StringBuilder("");
-        for (int i = 0; i < 3; i++) {
-            sb.append(bit[i]);
-        }
 
-        if (mListener != null) {
-            mListener.onSpanDetected(sb.toString());
+        if (mDetectListener != null) {
+            mDetectListener.onSpanDetected(bit);
         }
         super.onSelectionChanged(selStart, selEnd);
     }

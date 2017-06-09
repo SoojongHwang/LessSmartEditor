@@ -37,18 +37,21 @@ import java.util.List;
 public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
         implements ItemTouchHelperListener {
     private EditorPresenter mPresenter;
-    private MyEditText.MySpanListener mSpanListener;
+    private MyEditText.MySpanDetectListener mSpanListener;
+    private MyEditText.MyEditTextFocusListener mFocusListener;
     private List<BaseComponent> mList;
 
     public ComponentAdapter(EditorPresenter presenter) {
         this.mPresenter = presenter;
         this.mList = new ArrayList<>();
         mList.add(new TitleComponent(Type.TITLE, ""));
+        mFocusListener = new MySpanSaver();
     }
 
     public ComponentAdapter(EditorPresenter presenter, List<BaseComponent> list) {
         this.mPresenter = presenter;
         this.mList = list;
+        mFocusListener = new MySpanSaver();
     }
 
     @Override
@@ -61,6 +64,7 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
                 vh = new TextViewHolder(text);
                 ((TextViewHolder) vh).setEditTextChangeListener(new EditTextChangeListener());
                 ((TextViewHolder) vh).setSpanDetector(mSpanListener);
+                ((TextViewHolder) vh).setSpanSaver(mFocusListener);
                 break;
             case IMAGE:
                 final View image = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_image, parent, false);
@@ -122,7 +126,7 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
         return mList;
     }
 
-    public void setMySpanListener(MyEditText.MySpanListener mySpanListener) {
+    public void setMySpanListener(MyEditText.MySpanDetectListener mySpanListener) {
         this.mSpanListener = mySpanListener;
     }
 
@@ -154,15 +158,13 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
         }
     }
 
-    public class MySpanSaver implements MyEditText.MySpanSaveListener {
-        private int position;
-
-        public void updatePosition(int position) {
-            this.position = position;
-        }
+    public class MySpanSaver implements MyEditText.MyEditTextFocusListener {
         @Override
-        public void save(List<SpanInfo> spanInfoList) {
-
+        public void save(int pos, List<SpanInfo> spanInfoList) {
+            if (mList.get(pos) instanceof TextComponent) {
+                ((TextComponent) (mList.get(pos))).setSpanInfoList(spanInfoList);
+                Log.d("SOOJONG","저장완료 in Adapter");
+            }
         }
     }
 }
