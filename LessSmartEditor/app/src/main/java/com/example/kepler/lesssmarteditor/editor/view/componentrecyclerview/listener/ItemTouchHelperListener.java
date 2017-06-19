@@ -6,5 +6,4 @@ package com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.lis
 
 public interface ItemTouchHelperListener {
     boolean onItemMove(int fromPosition, int toPosition);
-    void onItemRemove(int position);
 }

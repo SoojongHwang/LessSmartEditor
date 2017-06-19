@@ -51,7 +51,6 @@ public class TextViewHolder extends ComponentViewHolder<TextComponent> {
     }
     public void setSpanSaver(MyEditText.MyEditTextFocusListener myFocusListener){
         this.mFocusListener = myFocusListener;
-//        this.mEditText.set
         this.mEditText.setOnMyFocusListener(mFocusListener);
     }
     private void applySpanList(List<SpanInfo> spanList){

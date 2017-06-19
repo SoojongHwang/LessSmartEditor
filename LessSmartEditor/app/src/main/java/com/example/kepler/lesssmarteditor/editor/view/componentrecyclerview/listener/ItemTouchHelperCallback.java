@@ -5,6 +5,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 
 import com.example.kepler.lesssmarteditor.editor.model.component.domain.TitleComponent;
+import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.viewholder.TextViewHolder;
 import com.example.kepler.lesssmarteditor.editor.view.componentrecyclerview.viewholder.TitleViewHolder;
 
 /**
@@ -22,11 +23,10 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
-        int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
 
-        if (viewHolder instanceof TitleViewHolder)
+        if (viewHolder instanceof TitleViewHolder || viewHolder instanceof TextViewHolder)
             return 0;
-        return makeMovementFlags(dragFlags, swipeFlags);
+        return makeMovementFlags(dragFlags, 0);
     }
 
     @Override
@@ -40,7 +40,6 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        listener.onItemRemove(viewHolder.getAdapterPosition());
     }
 
     /**

@@ -110,14 +110,6 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
         return true;
     }
 
-    @Override
-    public void onItemRemove(int position) {
-        if (!mList.isEmpty())
-            mList.remove(position);
-        notifyItemRemoved(position);
-        mPresenter.notifyDocumentChanged();
-    }
-
     public void addComponent(BaseComponent component) {
         mList.add(component);
     }
@@ -128,6 +120,10 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
 
     public void setMySpanListener(MyEditText.MySpanDetectListener mySpanListener) {
         this.mSpanListener = mySpanListener;
+    }
+
+    public void setTitleImage(String imageUrl){
+        ((TitleComponent)mList.get(0)).setImageUri(imageUrl);
     }
 
     public class EditTextChangeListener implements TextWatcher {
@@ -163,7 +159,6 @@ public class ComponentAdapter extends RecyclerView.Adapter<ComponentViewHolder>
         public void save(int pos, List<SpanInfo> spanInfoList) {
             if (mList.get(pos) instanceof TextComponent) {
                 ((TextComponent) (mList.get(pos))).setSpanInfoList(spanInfoList);
-                Log.d("SOOJONG","저장완료 in Adapter");
             }
         }
     }

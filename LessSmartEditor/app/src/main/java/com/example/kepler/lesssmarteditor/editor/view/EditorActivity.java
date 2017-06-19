@@ -76,6 +76,8 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     private static MyEditText et;
     private Spannable eSpan;
     private MySpanChecker spanChecker;
+    private boolean[] spanLights;
+    private Toast toast;
     //
     private Dialog mSelectDialog;
     private ProgressDialog mProgressDialog;
@@ -89,8 +91,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     static final int REQ_CODE_IMAGE = 0;
     static final int REQ_CODE_MAP = 100;
 
-    private InputFilter inputFilter;
-    private InputFilter.LengthFilter lengthFilter;
+    static public InputFilter[] filters;
 
     private TitleAdapter titleAdapter;
     @BindView(R.id.editor_title_recyclerView)
@@ -102,13 +103,13 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     @BindView(R.id.spanMode)
     LinearLayout spanMode;
 
-    Animation translateLeftAnim;
-    Animation translateRightAnim;
+    private Animation translateLeftAnim;
+    private Animation translateRightAnim;
 
-    boolean isPageOpen = false;
+    private boolean isPageOpen = false;
     private Menu mMenu;
 
-    InputMethodManager imm;
+    private InputMethodManager imm;
 
 
     @Override
@@ -123,11 +124,13 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     private void init() {
         mPresenter = new EditorPresenterImpl(this);
         spanChecker = new MySpanChecker();
+        spanLights = new boolean[3];
         initRecyclerView();
         initSlidingPage();
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         makeSelectDialogs();
         makeInputFilters();
+        toast = Toast.makeText(getApplicationContext(),"",Toast.LENGTH_SHORT);
     }
 
     private void initRecyclerView() {
@@ -154,7 +157,8 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
 
     @Override
     public void showToast(String str) {
-        Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
+        toast.setText(str);
+        toast.show();
     }
 
     @Override
@@ -202,16 +206,17 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQ_CODE_IMAGE) {
-            if (resultCode == Activity.RESULT_OK) {
-                String path = data.getData().toString();
-                mPresenter.addImage(path);
-            }
-        }
-        if (requestCode == REQ_CODE_MAP) {
-            if (resultCode == Activity.RESULT_OK) {
-                Item item = data.getParcelableExtra("data");
-                mPresenter.addMap(item);
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
+                case REQ_CODE_IMAGE:
+                    String path = data.getData().toString();
+                    mPresenter.addImage(path);
+                    break;
+                case REQ_CODE_MAP:
+                    Item item = data.getParcelableExtra("data");
+                    mPresenter.addMap(item);
+                    break;
+                case 333:
             }
         }
     }
@@ -223,8 +228,9 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
 
     @OnClick(R.id.btn_save)
     public void onClickedSave() {
-        if(et != null)
+        if (et != null)
             et.clearFocus();
+        clearCurrentFocus();
         List<BaseComponent> list = adapter.getList();
         mPresenter.saveDocumentsToDatabase(list);
     }
@@ -241,6 +247,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
         int itemId = item.getItemId();
         switch (itemId) {
             case R.id.action_open:
+                clearCurrentFocus();
                 if (isPageOpen) {
                     page.startAnimation(translateRightAnim);
                 } else {
@@ -326,128 +333,147 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     }
 
     private void makeInputFilters() {
-        inputFilter = new InputFilter() {
+        filters = new InputFilter[2];
+        filters[0] = new InputFilter() {
             private String blockCharacterSet = "~#^|$%'&*!;";
 
             @Override
             public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
                 for (int i = start; i < end; i++) {
                     if (source != null && blockCharacterSet.contains(source)) {
+                        toast.setText(source+" 는 입력할 수 없습니다.");
+                        toast.show();
                         return "";
                     }
                 }
                 return null;
             }
         };
-        lengthFilter = new InputFilter.LengthFilter(20);
+        filters[1] = new InputFilter(){
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                final int mMax = 15;
+                int keep = mMax - (dest.length() - (dend - dstart));
+                if (keep <= 0) {
+                    toast.setText("15자를 초과하면 안됩니다.");
+                    toast.show();
+                    return "";
+                } else if (keep >= end - start) {
+                    return null; // keep original
+                } else {
+                    keep += start;
+                    if (Character.isHighSurrogate(source.charAt(keep - 1))) {
+                        --keep;
+                        if (keep == start) {
+                            return "";
+                        }
+                    }
+                    return source.subSequence(start, keep);
+                }
+
+            }
+        };
     }
 
     @OnClick(R.id.tb1)
     public void onClickedBold() {
-        eSpan = et.getText();
-        int s = et.getSelectionStart();
-        int e = et.getSelectionEnd();
-
         if (b1_bold.isChecked()) {
-            if (s == e) {
-                et.getText().insert(e++, " ");
-                et.setSelection(s, e);
-            }
-            eSpan.setSpan(new StyleSpan(Typeface.BOLD), s, e, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-            b1_bold.setChecked(true);
+            applySpanToEditText(SpanType.BOLD);
         } else {
-            StyleSpan[] sArr = eSpan.getSpans(s, e, StyleSpan.class);
-            for (StyleSpan ss : sArr) {
-                if (ss.getStyle() == Typeface.BOLD) {
-                    int spanStart = eSpan.getSpanStart(ss);
-                    int spanEnd = eSpan.getSpanEnd(ss);
-
-                    eSpan.removeSpan(ss);
-
-                    if (s == e) {
-                        et.getText().insert(e++, " ");
-                        et.setSelection(s, e);
-                    }
-                    if (spanStart < s)
-                        eSpan.setSpan(new StyleSpan(Typeface.BOLD), spanStart, s, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-                    if (spanEnd > e)
-                        eSpan.setSpan(new StyleSpan(Typeface.BOLD), e, spanEnd, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-                }
-            }
+            clearSpanFromEditText(SpanType.BOLD);
         }
-        et.onSelectionChanged(et.getSelectionStart(), et.getSelectionEnd());
     }
 
     @OnClick(R.id.tb2)
     public void onClickedItalic() {
-        eSpan = et.getText();
-        int s = et.getSelectionStart();
-        int e = et.getSelectionEnd();
-
         if (b2_italic.isChecked()) {
-            if (s == e) {
-                et.getText().insert(e++, " ");
-                et.setSelection(s, e);
-            }
-            eSpan.setSpan(new StyleSpan(Typeface.ITALIC), s, e, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-            b2_italic.setChecked(true);
+            applySpanToEditText(SpanType.ITALIC);
         } else {
-            StyleSpan[] sArr = eSpan.getSpans(s, e, StyleSpan.class);
-            for (StyleSpan ss : sArr) {
-                if (ss.getStyle() == Typeface.ITALIC) {
-                    int spanStart = eSpan.getSpanStart(ss);
-                    int spanEnd = eSpan.getSpanEnd(ss);
-
-                    eSpan.removeSpan(ss);
-
-                    if (s == e) {
-                        et.getText().insert(e++, " ");
-                        et.setSelection(s, e);
-                    }
-                    if (spanStart < s)
-                        eSpan.setSpan(new StyleSpan(Typeface.ITALIC), spanStart, s, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-                    if (spanEnd > e)
-                        eSpan.setSpan(new StyleSpan(Typeface.ITALIC), e, spanEnd, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-                }
-            }
+            clearSpanFromEditText(SpanType.ITALIC);
         }
-        et.onSelectionChanged(et.getSelectionStart(), et.getSelectionEnd());
     }
 
     @OnClick(R.id.tb3)
     public void onClickedUnderline() {
+        if (b3_underline.isChecked()) {
+            applySpanToEditText(SpanType.UNDERLINE);
+        } else {
+            clearSpanFromEditText(SpanType.UNDERLINE);
+        }
+    }
+    private void applySpanToEditText(SpanType type) {
         et.clearComposingText();
         eSpan = et.getText();
         int s = et.getSelectionStart();
         int e = et.getSelectionEnd();
 
-        if (b3_underline.isChecked()) {
-            if (s == e) {
-                et.getText().insert(e++, " ");
-                et.setSelection(s, e);
-            }
-            eSpan.setSpan(new MyUnderlineSpan(), s, e, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-            b3_underline.setChecked(true);
-        } else {
-            MyUnderlineSpan[] uArr = eSpan.getSpans(s, e, MyUnderlineSpan.class);
-            for (MyUnderlineSpan us : uArr) {
-                int spanStart = eSpan.getSpanStart(us);
-                int spanEnd = eSpan.getSpanEnd(us);
+        if (s == e) {
+            et.getText().insert(e++, " ");
+            et.setSelection(s, e);
+        }
+        switch (type) {
+            case BOLD:
+                eSpan.setSpan(new StyleSpan(Typeface.BOLD), s, e, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+                break;
+            case ITALIC:
+                eSpan.setSpan(new StyleSpan(Typeface.ITALIC), s, e, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+                break;
+            case UNDERLINE:
+                eSpan.setSpan(new MyUnderlineSpan(), s, e, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+                break;
+        }
+    }
 
-                eSpan.removeSpan(us);
+    private void clearSpanFromEditText(SpanType type) {
+        et.clearComposingText();
+        eSpan = et.getText();
+        int s = et.getSelectionStart();
+        int e = et.getSelectionEnd();
 
-                if (s == e) {
-                    et.getText().insert(e++, " ");
-                    et.setSelection(s, e);
+        switch (type) {
+            case BOLD:
+            case ITALIC:
+                StyleSpan[] sArr = eSpan.getSpans(s, e, StyleSpan.class);
+                for (StyleSpan ss : sArr) {
+                    if (ss.getStyle() == type.getTypeValue()) {
+                        int spanStart = eSpan.getSpanStart(ss);
+                        int spanEnd = eSpan.getSpanEnd(ss);
+
+                        eSpan.removeSpan(ss);
+
+                        if (s == e) {
+                            et.getText().insert(e++, " ");
+                            et.setSelection(s, e);
+                        }
+                        if (spanStart < s)
+                            eSpan.setSpan(new StyleSpan(type.getTypeValue()), spanStart, s, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+                        if (spanEnd > e)
+                            eSpan.setSpan(new StyleSpan(type.getTypeValue()), e, spanEnd, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+                    }
                 }
-                if (spanStart < s)
-                    eSpan.setSpan(new MyUnderlineSpan(), spanStart, s, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-                if (spanEnd > e)
-                    eSpan.setSpan(new MyUnderlineSpan(), e, spanEnd, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-            }
+                break;
+            case UNDERLINE:
+                MyUnderlineSpan[] uArr = eSpan.getSpans(s, e, MyUnderlineSpan.class);
+                for (MyUnderlineSpan us : uArr) {
+                    int spanStart = eSpan.getSpanStart(us);
+                    int spanEnd = eSpan.getSpanEnd(us);
+
+                    eSpan.removeSpan(us);
+
+                    if (s == e) {
+                        et.getText().insert(e++, " ");
+                        et.setSelection(s, e);
+                    }
+                    if (spanStart < s)
+                        eSpan.setSpan(new MyUnderlineSpan(), spanStart, s, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+                    if (spanEnd > e)
+                        eSpan.setSpan(new MyUnderlineSpan(), e, spanEnd, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+                }
+                break;
         }
         et.onSelectionChanged(et.getSelectionStart(), et.getSelectionEnd());
     }
+
 
     private void clearCurrentFocus() {
         View currentView = getCurrentFocus();
@@ -483,7 +509,6 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                     Type type = Type.getType(itemType);
                     switch (type) {
                         case TEXT:
-//                        case TITLE:
                             generalMode.setVisibility(View.GONE);
                             spanMode.setVisibility(View.VISIBLE);
                             TextViewHolder tvh = (TextViewHolder) rv.getChildViewHolder(v);
@@ -495,6 +520,8 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
                         case MAP:
                             generalMode.setVisibility(View.VISIBLE);
                             spanMode.setVisibility(View.GONE);
+                            break;
+                        case TITLE:
                             break;
                     }
                 } else {
@@ -519,6 +546,7 @@ public class EditorActivity extends AppCompatActivity implements EditorView {
     public class MySpanChecker implements MyEditText.MySpanDetectListener {
         @Override
         public void onSpanDetected(boolean[] bit) {
+            spanLights = bit;
             b1_bold.setChecked(bit[0]);
             b2_italic.setChecked(bit[1]);
             b3_underline.setChecked(bit[2]);
